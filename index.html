@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LabelsPrint - Free Avery Label Maker</title>
+    <meta name="description" content="LabelsPrint is a free, no-signup Avery label maker and mail merge label tool that runs in your browser. Upload a CSV, paste data, or enter labels manually, then export print-ready PDF or DOCX files.">
+    <meta name="keywords" content="avery label maker, avery 5160 labels, free label maker, mail merge labels, Avery mail merge, pdf label generator, csv labels, docx labels">
+    <meta name="theme-color" content="#0039A6">
+    <link rel="canonical" href="https://labelsprint.app/">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="/src/index.css">
+    <style>
+      .seo-static-content {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: normal;
+        border: 0;
+      }
+    </style>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebApplication",
+            "@id": "https://labelsprint.app/#webapp",
+            "name": "LabelsPrint",
+            "url": "https://labelsprint.app/",
+            "description": "LabelsPrint is a free, no-signup browser-based Avery label maker and mail merge label tool for CSV upload, pasted data, manual entry, Avery template search, and PDF or DOCX export.",
+            "applicationCategory": "UtilitiesApplication",
+            "operatingSystem": "Web",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://labelsprint.app/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is LabelsPrint?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "LabelsPrint is a free browser-based label maker for creating Avery-compatible labels from CSV uploads, pasted data, or manual entry."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does LabelsPrint work with Avery 5160 and other Avery labels?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. LabelsPrint supports Avery 5160 labels and includes a searchable Avery template catalog with calibrated layouts for popular Avery formats."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do I need to create an account?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. LabelsPrint is free to use and does not require sign-up or an account."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I upload a CSV to print labels?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. You can upload a CSV file, map or auto-detect columns, preview the label layout, and export the finished labels."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What file formats can I export?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "LabelsPrint exports labels as PDF and DOCX files."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I use LabelsPrint for mail merge labels?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. LabelsPrint can create mail merge labels from CSV data, pasted rows, manual entry, or selected Google Sheets rows in the Workspace extension."
+                }
+              }
+            ]
+          },
+          {
+            "@type": "HowTo",
+            "@id": "https://labelsprint.app/#how-to",
+            "name": "How to Print Avery Mail Merge Labels with LabelsPrint",
+            "description": "Use LabelsPrint to create Avery mail merge labels from CSV data, pasted text, manual entry, or Google Sheets data, then export a print-ready PDF or DOCX file.",
+            "step": [
+              {
+                "@type": "HowToStep",
+                "name": "Choose your input method",
+                "text": "Upload a CSV, paste data, or enter labels manually."
+              },
+              {
+                "@type": "HowToStep",
+                "name": "Map your columns",
+                "text": "Tell LabelsPrint which column is the label text (or use auto-detect)."
+              },
+              {
+                "@type": "HowToStep",
+                "name": "Select your label format",
+                "text": "Search the Avery catalog and choose a calibrated sheet layout."
+              },
+              {
+                "@type": "HowToStep",
+                "name": "Preview your labels",
+                "text": "Review layout before exporting."
+              },
+              {
+                "@type": "HowToStep",
+                "name": "Export and print",
+                "text": "Download as PDF or DOCX, then print on your label sheets."
+              }
+            ]
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://labelsprint.app/#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://labelsprint.app/"
+              }
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://labelsprint.app/#website",
+            "name": "LabelsPrint",
+            "url": "https://labelsprint.app/",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://labelsprint.app/?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          }
+        ]
+      }
+    </script>
+    <script type="importmap">
+      {
+        "imports": {
+          "docx": "https://esm.sh/docx@8.6.0",
+          "jspdf": "https://esm.sh/jspdf@2.5.2",
+          "lucide": "https://esm.sh/lucide@0.468.0",
+          "papaparse": "https://esm.sh/papaparse@5.4.1",
+          "react": "https://esm.sh/react@18.3.1",
+          "react-dom/client": "https://esm.sh/react-dom@18.3.1/client"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main id="seo-content" class="seo-static-content">
+      <h1>Free Avery Label Maker — No Sign-Up Required</h1>
+      <p>LabelsPrint is a free browser-based Avery label maker and mail merge label tool for creating print-ready labels without installing software or creating an account. Upload a CSV, paste label data, or enter labels manually, then preview your sheet and export as PDF or DOCX.</p>
+      <p>LabelsPrint includes a searchable Avery template catalog with calibrated layouts for popular Avery address, shipping, return, file folder, badge, card, and specialty formats. The Google Workspace extension supports mail merge labels from selected Google Sheets rows.</p>
+
+      <section aria-labelledby="seo-features-title">
+        <h2 id="seo-features-title">LabelsPrint Features</h2>
+        <ul>
+          <li>CSV upload for bulk label data</li>
+          <li>Paste rows or address blocks directly into the app</li>
+          <li>Manual entry for one-off label sheets</li>
+          <li>Mail merge labels from spreadsheet rows</li>
+          <li>Searchable Avery template catalog with popular calibrated layouts</li>
+          <li>PDF and DOCX export for printing</li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="seo-faq-title">
+        <h2 id="seo-faq-title">Frequently Asked Questions</h2>
+        <article>
+          <h3>What is LabelsPrint?</h3>
+          <p>LabelsPrint is a free browser-based label maker for creating Avery-compatible labels from CSV uploads, pasted data, or manual entry.</p>
+        </article>
+        <article>
+          <h3>Does LabelsPrint work with Avery 5160 and other Avery labels?</h3>
+          <p>Yes. LabelsPrint supports Avery 5160 labels and includes a searchable Avery template catalog with calibrated layouts for popular Avery formats.</p>
+        </article>
+        <article>
+          <h3>Do I need to create an account?</h3>
+          <p>No. LabelsPrint is free to use and does not require sign-up or an account.</p>
+        </article>
+        <article>
+          <h3>Can I upload a CSV to print labels?</h3>
+          <p>Yes. You can upload a CSV file, map or auto-detect columns, preview the label layout, and export the finished labels.</p>
+        </article>
+        <article>
+          <h3>What file formats can I export?</h3>
+          <p>LabelsPrint exports labels as PDF and DOCX files.</p>
+        </article>
+        <article>
+          <h3>Can I use LabelsPrint for mail merge labels?</h3>
+          <p>Yes. LabelsPrint can create mail merge labels from CSV data, pasted rows, manual entry, or selected Google Sheets rows in the Workspace extension.</p>
+        </article>
+      </section>
+
+      <section aria-labelledby="seo-howto-title">
+        <h2 id="seo-howto-title">How to Print Avery Mail Merge Labels with LabelsPrint</h2>
+        <ol>
+          <li><strong>Choose your input method</strong> — Upload a CSV, paste data, or enter labels manually</li>
+          <li><strong>Map your columns</strong> — Tell LabelsPrint which column is the label text (or use auto-detect)</li>
+          <li><strong>Select your label format</strong> — Search the Avery catalog and choose a calibrated sheet layout</li>
+          <li><strong>Preview your labels</strong> — Review layout before exporting</li>
+          <li><strong>Export and print</strong> — Download as PDF or DOCX, then print on your label sheets</li>
+        </ol>
+      </section>
+    </main>
+
+    <div id="app"></div>
+    <div id="howto-modal-root"></div>
+
+    <footer class="site-footer">
+      <a href="/privacy.html">Privacy Policy</a>
+    </footer>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
