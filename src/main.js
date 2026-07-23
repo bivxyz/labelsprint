@@ -263,12 +263,6 @@ function renderShell() {
     <header class="app-header">
       <div class="app-promo-bar">
         <p>Free label maker for Avery-compatible sheets.</p>
-        <nav aria-label="LabelsPrint utility links">
-          <a href="#features">Features</a>
-          <button class="nav-link-button" type="button" data-open-template-library>Templates</button>
-          <a href="#faq">Help</a>
-          <a href="/privacy.html">Privacy</a>
-        </nav>
       </div>
       <div class="app-main-nav">
         <a class="labelsprint-wordmark" href="#app" aria-label="LabelsPrint home">
@@ -278,15 +272,11 @@ function renderShell() {
           <span>LabelsPrint.app</span>
         </a>
         <nav class="app-nav-links" aria-label="LabelsPrint navigation">
-          <a href="#app">Label maker</a>
           <button class="nav-link-button" type="button" data-open-template-library>Templates</button>
           <a href="#features">Mail merge</a>
           <a href="#faq">Help</a>
+          <a href="/privacy.html">Privacy</a>
         </nav>
-        <div class="brand-copy">
-          <h1>LabelsPrint.app</h1>
-          <p>Free label maker for Avery sheets</p>
-        </div>
       </div>
       <div class="tool-action-bar">
         <div id="workspaceChip" class="status-chip hidden">
