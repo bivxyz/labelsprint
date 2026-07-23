@@ -71,9 +71,9 @@ const ICON_PRESETS = Object.freeze([
 const TUTORIAL_KEY = "labelsprint_tutorial_seen";
 
 const sampleRows = [
-  { name: "Ada Lovelace", address: "12 Analytical Way", city_state_zip: "London, UK" },
-  { name: "Grace Hopper", address: "77 Compiler Ct", city_state_zip: "Arlington, VA 22201" },
-  { name: "Katherine Johnson", address: "101 Orbit Road", city_state_zip: "Hampton, VA 23666" },
+  { name: "John Doe", address: "123 Street Ave", city_state_zip: "City, State 12345" },
+  { name: "Jane Doe", address: "456 Label Lane", city_state_zip: "City, State 12345" },
+  { name: "Sample Recipient", address: "789 Mail Merge Rd", city_state_zip: "City, State 12345" },
 ];
 
 let state = {
