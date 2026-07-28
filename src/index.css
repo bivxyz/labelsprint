@@ -1598,7 +1598,7 @@ button.template-card-main {
 }
 
 .seo-feature-list li::before {
-  content: "âœ“";
+  content: "\2713";
   position: absolute;
   left: 14px;
   top: 11px;
@@ -1701,7 +1701,8 @@ button.template-card-main {
   gap: 12px 28px;
 }
 
-.site-footer a {
+.site-footer a,
+.footer-link-button {
   font-family: var(--font-body);
   color: var(--avery-navy);
   font-size: 14px;
@@ -1709,7 +1710,17 @@ button.template-card-main {
   text-decoration: none;
 }
 
-.site-footer a:hover {
+.footer-link-button {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.site-footer a:hover,
+.footer-link-button:hover {
   color: var(--blue);
   text-decoration: underline;
 }

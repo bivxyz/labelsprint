@@ -37,38 +37,37 @@ const ICON_PRESETS = Object.freeze([
   {
     category: "Popular",
     icons: [
-      { value: "⭐", label: "Star" },
-      { value: "❤️", label: "Heart" },
-      { value: "✨", label: "Sparkles" },
-      { value: "✅", label: "Check" },
-      { value: "🎉", label: "Celebration" },
-      { value: "🏷️", label: "Tag" },
+      { value: "\u2B50", label: "Star" },
+      { value: "\u2764\uFE0F", label: "Heart" },
+      { value: "\u2728", label: "Sparkles" },
+      { value: "\u2705", label: "Check" },
+      { value: "\uD83C\uDF89", label: "Celebration" },
+      { value: "\uD83C\uDFF7\uFE0F", label: "Tag" },
     ],
   },
   {
     category: "Holiday",
     icons: [
-      { value: "🎅", label: "Santa" },
-      { value: "🎄", label: "Christmas tree" },
-      { value: "🎁", label: "Gift" },
-      { value: "❄️", label: "Snowflake" },
-      { value: "🦃", label: "Thanksgiving" },
-      { value: "🎃", label: "Pumpkin" },
+      { value: "\uD83C\uDF85", label: "Santa" },
+      { value: "\uD83C\uDF84", label: "Christmas tree" },
+      { value: "\uD83C\uDF81", label: "Gift" },
+      { value: "\u2744\uFE0F", label: "Snowflake" },
+      { value: "\uD83E\uDD83", label: "Thanksgiving" },
+      { value: "\uD83C\uDF83", label: "Pumpkin" },
     ],
   },
   {
     category: "Events",
     icons: [
-      { value: "🎂", label: "Birthday cake" },
-      { value: "💍", label: "Wedding ring" },
-      { value: "🌸", label: "Flower" },
-      { value: "🏡", label: "Home" },
-      { value: "📦", label: "Package" },
-      { value: "✉️", label: "Envelope" },
+      { value: "\uD83C\uDF82", label: "Birthday cake" },
+      { value: "\uD83D\uDC8D", label: "Wedding ring" },
+      { value: "\uD83C\uDF38", label: "Flower" },
+      { value: "\uD83C\uDFE1", label: "Home" },
+      { value: "\uD83D\uDCE6", label: "Package" },
+      { value: "\u2709\uFE0F", label: "Envelope" },
     ],
   },
-]);
-const TUTORIAL_KEY = "labelsprint_tutorial_seen";
+]);const TUTORIAL_KEY = "labelsprint_tutorial_seen";
 
 const sampleRows = [
   { name: "John Doe", address: "123 Street Ave", city_state_zip: "City, State 12345" },
