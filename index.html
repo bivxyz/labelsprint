@@ -3,133 +3,227 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LabelsPrint - Free Label Maker for Avery Sheets</title>
-    <meta name="description" content="LabelsPrint is a free Avery-compatible label maker and mail merge label tool that runs in your browser. Upload a CSV, paste data, or enter labels manually, then preview, print, or export PDF and DOCX files.">
-    <meta name="keywords" content="avery label maker, avery 5160 labels, free label maker, mail merge labels, Avery mail merge, pdf label generator, csv labels, docx labels">
+    <title>Free Label Maker for Avery-Compatible Sheets | LabelsPrint</title>
+    <meta name="description" content="Create and print Avery-compatible labels free in your browser. Type labels, paste addresses, or upload a CSV, then preview and download PDF or DOCX files.">
     <meta name="theme-color" content="#0039A6">
     <link rel="canonical" href="https://labelsprint.app/">
     <link rel="icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="stylesheet" href="/src/index.css">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="LabelsPrint">
+    <meta property="og:title" content="Free Label Maker for Avery-Compatible Sheets">
+    <meta property="og:description" content="Create labels from manual entry, pasted addresses, or CSV data. Preview, print, or download PDF and DOCX files without signing up.">
+    <meta property="og:url" content="https://labelsprint.app/">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Free Label Maker for Avery-Compatible Sheets">
+    <meta name="twitter:description" content="Create, preview, and print Avery-compatible label sheets free in your browser.">
+    <link rel="stylesheet" href="/src/home.css">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "@id": "https://labelsprint.app/#webapp",
-        "name": "LabelsPrint",
-        "alternateName": "LabelsPrint.app",
-        "url": "https://labelsprint.app/",
-        "description": "LabelsPrint is a free browser-based label maker for Avery-compatible sheets. Create mail merge labels from manual entry, pasted rows, or CSV data, choose an Avery template, preview the sheet, then download PDF or DOCX files or print directly from the app.",
-        "applicationCategory": "UtilitiesApplication",
-        "operatingSystem": "Web",
-        "browserRequirements": "Requires a modern web browser with JavaScript enabled.",
-        "isAccessibleForFree": true,
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        },
-        "featureList": [
-          "Avery-compatible template selection",
-          "Manual label entry",
-          "CSV upload for mail merge labels",
-          "Paste rows or address blocks",
-          "Label preview",
-          "Optional logo and icon placement",
-          "PDF export",
-          "DOCX export",
-          "Direct browser printing"
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://labelsprint.app/#website",
+            "url": "https://labelsprint.app/",
+            "name": "LabelsPrint",
+            "description": "A free browser-based label maker for Avery-compatible sheets."
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://labelsprint.app/#software",
+            "name": "LabelsPrint",
+            "alternateName": "LabelsPrint.app",
+            "url": "https://labelsprint.app/",
+            "applicationCategory": "UtilitiesApplication",
+            "applicationSubCategory": "Label maker",
+            "operatingSystem": "Web",
+            "browserRequirements": "Requires a modern web browser with JavaScript enabled.",
+            "description": "LabelsPrint is a free browser-based label maker for Avery-compatible sheets. Create labels from manual entry, pasted rows, or CSV data, then preview, print, or export PDF and DOCX files.",
+            "isAccessibleForFree": true,
+            "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+            "featureList": [
+              "Avery-compatible template selection",
+              "Manual label entry",
+              "CSV upload and pasted rows for mail merge labels",
+              "Print-ready sheet preview",
+              "Optional logo and icon placement",
+              "PDF and DOCX download",
+              "Direct browser printing"
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://labelsprint.app/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is LabelsPrint?",
+                "acceptedAnswer": { "@type": "Answer", "text": "LabelsPrint is a free browser-based label maker for creating and printing Avery-compatible label sheets." }
+              },
+              {
+                "@type": "Question",
+                "name": "Is LabelsPrint free?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. The LabelsPrint web app is free to use and does not require an account or signup." }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I make labels from Excel or Google Sheets data?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. Export spreadsheet rows as a CSV and upload the file, or paste rows directly into LabelsPrint for a mail merge label workflow." }
+              },
+              {
+                "@type": "Question",
+                "name": "Which label templates does LabelsPrint support?",
+                "acceptedAnswer": { "@type": "Answer", "text": "LabelsPrint includes a searchable catalog of calibrated Avery-compatible templates, including popular address, shipping, return, card, and badge formats." }
+              },
+              {
+                "@type": "Question",
+                "name": "What file formats can I download?",
+                "acceptedAnswer": { "@type": "Answer", "text": "You can download finished label sheets as PDF or DOCX files, or print directly from your browser." }
+              },
+              {
+                "@type": "Question",
+                "name": "Does LabelsPrint upload my label data?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. The web app processes label data locally in your browser and does not require an account." }
+              }
+            ]
+          }
         ]
-      }
-    </script>
-    <script type="importmap">
-      {
-        "imports": {
-          "docx": "https://esm.sh/docx@8.6.0",
-          "jspdf": "https://esm.sh/jspdf@2.5.2",
-          "lucide": "https://esm.sh/lucide@0.468.0",
-          "papaparse": "https://esm.sh/papaparse@5.4.1",
-          "react": "https://esm.sh/react@18.3.1",
-          "react-dom/client": "https://esm.sh/react-dom@18.3.1/client"
-        }
       }
     </script>
   </head>
   <body>
-    <div id="app"></div>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="home-header">
+      <div class="home-nav-wrap">
+        <a class="home-wordmark" href="/" aria-label="LabelsPrint homepage">
+          <span class="home-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+          <span>LabelsPrint.app</span>
+        </a>
+        <nav class="home-nav" aria-label="Primary navigation">
+          <a href="/app/">Label Maker</a>
+          <a href="/app/?templates=1">Templates</a>
+          <a href="#workspace">Workspace</a>
+          <a href="#faq">FAQ</a>
+          <a href="/privacy.html">Privacy</a>
+        </nav>
+        <a class="button button-small" href="/app/">Open label maker</a>
+      </div>
+    </header>
 
-    <main class="seo-page-content" aria-label="LabelsPrint overview">
-      <section class="seo-hero">
-        <p class="seo-kicker">Free label maker</p>
-        <h2>Make Avery-compatible labels from your browser</h2>
-        <p>LabelsPrint helps you create address labels, shipping labels, return labels, name badges, cards, and other Avery-compatible sheets without installing software.</p>
+    <main id="main-content">
+      <section class="home-hero">
+        <div class="home-hero-copy">
+          <p class="eyebrow">Free online label creator</p>
+          <h1>Free label maker for Avery-compatible sheets</h1>
+          <p class="hero-summary">Turn typed text, pasted addresses, or CSV spreadsheet data into print-ready label sheets. Preview every label, then print directly or download a PDF or DOCX.</p>
+          <div class="hero-actions">
+            <a class="button" href="/app/">Open label maker <span aria-hidden="true">&rarr;</span></a>
+            <a class="text-link" href="/app/?templates=1">Browse label templates</a>
+          </div>
+          <ul class="hero-trust" aria-label="LabelsPrint benefits">
+            <li>No signup</li><li>Free to use</li><li>Data stays in your browser</li>
+          </ul>
+        </div>
+
+        <div class="product-visual" aria-label="Preview of an Avery-compatible address label sheet">
+          <div class="product-window-bar">
+            <span class="window-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+            <div><strong>Live sheet preview</strong><span>Avery 5160 / 8160</span></div>
+            <span class="preview-status">30 labels</span>
+          </div>
+          <div class="sheet-stage">
+            <div class="label-sheet" aria-hidden="true">
+              <span>John Doe<br>123 Street Ave<br>City, State 12345</span><span>Jane Doe<br>456 Label Lane<br>City, State 12345</span><span>Sample Recipient<br>789 Mail Merge Rd<br>City, State 12345</span>
+              <span>John Doe<br>123 Street Ave<br>City, State 12345</span><span>Jane Doe<br>456 Label Lane<br>City, State 12345</span><span>Sample Recipient<br>789 Mail Merge Rd<br>City, State 12345</span>
+              <span>John Doe<br>123 Street Ave<br>City, State 12345</span><span>Jane Doe<br>456 Label Lane<br>City, State 12345</span><span>Sample Recipient<br>789 Mail Merge Rd<br>City, State 12345</span>
+              <span>John Doe<br>123 Street Ave<br>City, State 12345</span><span>Jane Doe<br>456 Label Lane<br>City, State 12345</span><span>Sample Recipient<br>789 Mail Merge Rd<br>City, State 12345</span>
+            </div>
+          </div>
+          <div class="product-window-footer"><span><strong>PDF</strong> and <strong>DOCX</strong> downloads</span><span class="print-chip">Print ready</span></div>
+        </div>
       </section>
 
-      <section id="features" class="seo-band">
-        <div>
-          <p class="seo-kicker">Mail merge labels</p>
-          <h2>Upload, paste, type, preview, print</h2>
-        </div>
-        <ul class="seo-feature-list">
-          <li>Use CSV upload for mail merge label sheets.</li>
-          <li>Paste addresses or rows directly into the app.</li>
-          <li>Choose Avery templates from a searchable catalog.</li>
-          <li>Download PDF or DOCX files, or print directly.</li>
-        </ul>
+      <section class="benefit-strip" aria-label="Label maker capabilities">
+        <div><strong>Manual</strong><span>Type one label and repeat it</span></div>
+        <div><strong>Paste</strong><span>Add address blocks or spreadsheet rows</span></div>
+        <div><strong>CSV mail merge</strong><span>Map columns into personalized labels</span></div>
+        <div><strong>Preview and print</strong><span>Check the sheet before using label stock</span></div>
       </section>
 
-      <section id="templates" class="seo-card-grid">
-        <article>
-          <h3>Avery address labels</h3>
-          <p>Start with popular formats like Avery 5160, 8160, 5161, 5162, and other letter-size sheets.</p>
-        </article>
-        <article>
-          <h3>Shipping and specialty labels</h3>
-          <p>Find templates by Avery number, category, shape, and labels per sheet.</p>
-        </article>
-        <article>
-          <h3>Browser-based privacy</h3>
-          <p>Label data stays in the browser while you work. No account is required for the web app.</p>
-        </article>
+      <section id="how-it-works" class="section-wrap how-section">
+        <div class="section-heading-block">
+          <p class="eyebrow">How it works</p>
+          <h2>From your list to finished labels in three steps</h2>
+          <p>LabelsPrint keeps the familiar mail merge workflow focused on the work that matters: add data, match a sheet, and print.</p>
+        </div>
+        <ol class="step-grid">
+          <li><span class="step-number">01</span><h3>Add your label content</h3><p>Type one label manually, paste multiple addresses, or upload a CSV exported from Excel or Google Sheets.</p></li>
+          <li><span class="step-number">02</span><h3>Choose and customize</h3><p>Search Avery-compatible templates, format the text, and add an optional logo or built-in icon.</p></li>
+          <li><span class="step-number">03</span><h3>Preview, download, or print</h3><p>Review the full sheet, edit individual labels, skip used positions, then print or export PDF and DOCX files.</p></li>
+        </ol>
       </section>
 
-      <section id="faq" class="seo-faq">
-        <div>
-          <p class="seo-kicker">Help</p>
-          <h2>Common LabelsPrint questions</h2>
-          <p>Use these quick answers to choose a template, prepare label content, and export a finished sheet.</p>
+      <section id="templates" class="feature-band">
+        <div class="feature-band-inner">
+          <div class="template-visual" aria-hidden="true">
+            <div class="mini-sheet mini-sheet-address"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <div class="mini-sheet mini-sheet-shipping"><span></span><span></span><span></span><span></span></div>
+            <div class="mini-sheet mini-sheet-cards"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          </div>
+          <div>
+            <p class="eyebrow">Searchable template library</p>
+            <h2>Find the sheet that matches your label package</h2>
+            <p>Search by Avery product number, category, shape, size, or labels per sheet. Calibrated templates use verified rows, columns, margins, and spacing for reliable output.</p>
+            <a class="button button-outline" href="/app/?templates=1">Browse templates <span aria-hidden="true">&rarr;</span></a>
+          </div>
         </div>
-        <div class="seo-faq-list">
-          <article>
-            <h3>How do I choose a label template?</h3>
-            <p>Use the Templates button in the app header to search by template number, size, category, shape, or labels per sheet.</p>
-          </article>
-          <article>
-            <h3>Can I use mail merge data?</h3>
-            <p>Yes. You can upload a CSV, paste rows or address blocks, or type label content manually.</p>
-          </article>
-          <article>
-            <h3>What can I export?</h3>
-            <p>LabelsPrint can download PDF or DOCX files and can also launch direct browser printing.</p>
-          </article>
+      </section>
+
+      <section class="section-wrap privacy-section">
+        <div><p class="eyebrow">Browser-based privacy</p><h2>Your label list stays with you</h2></div>
+        <div class="privacy-copy"><p>LabelsPrint processes manual entries, pasted rows, CSV files, and uploaded logos locally in your browser. The web app does not require an account and does not send your label data to a LabelsPrint server.</p><a class="text-link" href="/privacy.html">Read the privacy policy</a></div>
+      </section>
+
+      <section id="workspace" class="workspace-band">
+        <div class="workspace-copy">
+          <p class="eyebrow eyebrow-light">Google Workspace app</p><span class="coming-soon">Coming soon</span>
+          <h2>Create label sheets from Google Workspace</h2>
+          <p>A LabelsPrint extension is being prepared for Google Workspace. It will bring template selection, merge fields, label preview, PDF generation, and Google document output into a streamlined sidebar workflow.</p>
         </div>
+        <div class="workspace-panel" aria-label="Preview of the upcoming LabelsPrint Google Workspace extension">
+          <div class="workspace-panel-heading"><span class="window-mark"><span></span><span></span><span></span><span></span></span><strong>LabelsPrint</strong></div>
+          <label>Label template</label><div class="fake-select">Avery 5160 / 8160 <span>&#8964;</span></div>
+          <label>Label content</label><div class="fake-editor">&lt;&lt;Name&gt;&gt;<br>&lt;&lt;Street Address&gt;&gt;<br>&lt;&lt;City&gt;&gt;, &lt;&lt;State&gt;&gt; &lt;&lt;ZIP&gt;&gt;</div>
+          <div class="workspace-buttons"><span>Preview</span><strong>Create PDF</strong></div>
+        </div>
+      </section>
+
+      <section id="faq" class="section-wrap faq-section">
+        <div class="section-heading-block"><p class="eyebrow">Frequently asked questions</p><h2>Answers before you start printing</h2></div>
+        <div class="faq-list">
+          <details open><summary>What is LabelsPrint?</summary><p>LabelsPrint is a free browser-based label maker for creating and printing Avery-compatible label sheets.</p></details>
+          <details><summary>Is LabelsPrint free?</summary><p>Yes. The LabelsPrint web app is free to use and does not require an account or signup.</p></details>
+          <details><summary>Can I make labels from Excel or Google Sheets data?</summary><p>Yes. Export spreadsheet rows as a CSV and upload the file, or paste rows directly into LabelsPrint for a mail merge label workflow.</p></details>
+          <details><summary>Which label templates does LabelsPrint support?</summary><p>LabelsPrint includes a searchable catalog of calibrated Avery-compatible templates, including popular address, shipping, return, card, and badge formats.</p></details>
+          <details><summary>What file formats can I download?</summary><p>You can download finished label sheets as PDF or DOCX files, or print directly from your browser.</p></details>
+          <details><summary>Does LabelsPrint upload my label data?</summary><p>No. The web app processes label data locally in your browser and does not require an account.</p></details>
+        </div>
+      </section>
+
+      <section class="final-cta">
+        <div><p class="eyebrow eyebrow-light">Ready to make your labels?</p><h2>Start with a list. Finish with a print-ready sheet.</h2></div>
+        <a class="button button-white" href="/app/">Open label maker <span aria-hidden="true">&rarr;</span></a>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div>
-        <a class="footer-wordmark" href="#app">LabelsPrint.app</a>
-        <p>Free browser-based label making for Avery-compatible sheets, CSV mail merge, PDF/DOCX export, and direct printing.</p>
-        <strong>No signup required.</strong>
+    <footer class="home-footer">
+      <div class="footer-brand">
+        <a class="home-wordmark" href="/"><span class="home-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span><span>LabelsPrint.app</span></a>
+        <p>Free browser-based label making for Avery-compatible sheets. No signup required.</p>
       </div>
-      <nav aria-label="Footer">
-        <button class="footer-link-button" type="button" data-open-template-library>Templates</button>
-        <a href="#features">Mail merge</a>
-        <a href="#faq">Help</a>
-        <a href="/privacy.html">Privacy</a>
-      </nav>
+      <nav aria-label="Footer navigation"><a href="/app/">Label Maker</a><a href="/app/?templates=1">Templates</a><a href="#workspace">Workspace</a><a href="#faq">FAQ</a><a href="/privacy.html">Privacy</a></nav>
+      <p class="trademark-note">Avery and all other Avery brands and product names are trademarks of Avery Products Corporation. LabelsPrint is not affiliated with or endorsed by Avery Products Corporation.</p>
     </footer>
-
-    <script type="module" src="/src/main.js"></script>
   </body>
 </html>

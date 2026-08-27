@@ -264,16 +264,17 @@ function renderShell() {
         <p>Free label maker for Avery-compatible sheets.</p>
       </div>
       <div class="app-main-nav">
-        <a class="labelsprint-wordmark" href="#app" aria-label="LabelsPrint home">
+        <a class="labelsprint-wordmark" href="/" aria-label="LabelsPrint homepage">
           <span class="labelsprint-mark" aria-hidden="true">
             <span></span><span></span><span></span><span></span>
           </span>
           <span>LabelsPrint.app</span>
         </a>
         <nav class="app-nav-links" aria-label="LabelsPrint navigation">
+          <a href="/app/">Label Maker</a>
           <button class="nav-link-button" type="button" data-open-template-library>Templates</button>
-          <a href="#features">Mail merge</a>
-          <a href="#faq">Help</a>
+          <a href="/#workspace">Workspace</a>
+          <a href="/#faq">FAQ</a>
           <a href="/privacy.html">Privacy</a>
         </nav>
       </div>
@@ -1897,7 +1898,10 @@ function init() {
   bindEvents();
   initWorkspace();
   renderAll();
-  if (shouldAutoStartTutorial()) {
+  const shouldOpenTemplates = new URLSearchParams(window.location.search).get("templates") === "1";
+  if (shouldOpenTemplates) {
+    openTemplateModal();
+  } else if (shouldAutoStartTutorial()) {
     window.setTimeout(() => startTutorial(0), 350);
   }
 }

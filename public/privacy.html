@@ -5,22 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Privacy Policy - LabelsPrint</title>
     <meta name="description" content="LabelsPrint privacy policy. LabelsPrint processes label data locally in your browser and does not collect, store, or transmit your data.">
+    <meta name="robots" content="index,follow">
+    <meta name="theme-color" content="#0039A6">
     <link rel="canonical" href="https://labelsprint.app/privacy.html">
     <link rel="icon" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <style>
       body {
         margin: 0;
-        background: #f8fafc;
-        color: #111827;
+        background: #fff;
+        color: #000a55;
         font-family: "Circular", "Diatype", Arial, Helvetica, sans-serif;
         line-height: 1.6;
+      }
+
+      header,
+      footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 20px max(20px, calc((100vw - 1120px) / 2));
+        border-bottom: 1px solid #f1f1f1;
+        background: #fff;
+      }
+
+      footer {
+        border-top: 1px solid #f1f1f1;
+        border-bottom: 0;
+        background: #f7f7f7;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+      }
+
+      .wordmark {
+        color: #000a55;
+        font-size: 21px;
+        font-weight: 900;
+        text-decoration: none;
       }
 
       main {
         max-width: 720px;
         margin: 0 auto;
-        padding: 48px 20px;
+        min-height: 62vh;
+        padding: 72px 20px;
       }
 
       h1 {
@@ -31,22 +64,50 @@
 
       p {
         margin: 0 0 14px;
-        color: #374151;
+        color: #3f4262;
         font-size: 16px;
       }
 
       a {
-        color: #0b4aa2;
+        color: #0039a6;
         font-weight: 700;
+      }
+
+      @media (max-width: 680px) {
+        header,
+        footer {
+          align-items: flex-start;
+          flex-direction: column;
+        }
       }
     </style>
   </head>
   <body>
+    <header>
+      <a class="wordmark" href="/">LabelsPrint.app</a>
+      <nav aria-label="Primary navigation">
+        <a href="/app/">Label Maker</a>
+        <a href="/app/?templates=1">Templates</a>
+        <a href="/#workspace">Workspace</a>
+        <a href="/#faq">FAQ</a>
+        <a href="/privacy.html" aria-current="page">Privacy</a>
+      </nav>
+    </header>
     <main>
       <h1>Privacy Policy</h1>
       <p>LabelsPrint processes all label data locally in your browser. No data is collected, stored, or transmitted by LabelsPrint.</p>
       <p>LabelsPrint does not use cookies. LabelsPrint does not use analytics yet.</p>
-      <p><a href="/">Back to LabelsPrint</a></p>
+      <p><a href="/app/">Open the label maker</a></p>
     </main>
+    <footer>
+      <strong>LabelsPrint.app</strong>
+      <nav aria-label="Footer navigation">
+        <a href="/app/">Label Maker</a>
+        <a href="/app/?templates=1">Templates</a>
+        <a href="/#workspace">Workspace</a>
+        <a href="/#faq">FAQ</a>
+        <a href="/privacy.html">Privacy</a>
+      </nav>
+    </footer>
   </body>
 </html>

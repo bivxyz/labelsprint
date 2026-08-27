@@ -30,4 +30,11 @@ npm run dev
 npm run build
 ```
 
+The Vite build produces two public entry points in `dist/`:
+
+- `/` is the static, indexable LabelsPrint marketing homepage.
+- `/app/` is the interactive label editor and is intentionally marked `noindex,follow`.
+
+Cloudflare Pages should continue using `npm run build` with `dist` as the output directory.
+
 The generated Avery catalog index lives in `src/averyTemplateCatalog.js`. It stores safe template codes only; raw URLs and pasted page fragments are intentionally excluded. The Workspace integration scaffold lives in `workspace-extension/`.
