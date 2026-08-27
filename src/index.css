@@ -210,17 +210,18 @@ button:disabled {
 
 .labelsprint-mark {
   display: grid;
-  grid-template-columns: repeat(2, 9px);
-  gap: 5px;
-  width: 36px;
-  height: 36px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
   padding: 8px;
-  border-radius: 12px;
+  border-radius: 8px;
   background: var(--avery-heritage-blue);
 }
 
 .labelsprint-mark span {
-  border-radius: 3px;
+  border-radius: 2px;
   background: var(--avery-white);
 }
 
