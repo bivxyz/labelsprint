@@ -271,7 +271,7 @@ function renderShell() {
           <span>LabelsPrint.app</span>
         </a>
         <nav class="app-nav-links" aria-label="LabelsPrint navigation">
-          <a href="/app/">Label Maker</a>
+          <a href="/avery/">Label Maker</a>
           <button class="nav-link-button" type="button" data-open-template-library>Templates</button>
           <a href="/#workspace">Workspace</a>
           <a href="/#faq">FAQ</a>

@@ -9,7 +9,7 @@ export default defineConfig({
       external: ['docx', 'jspdf', 'lucide', 'papaparse', 'react', 'react-dom/client'],
       input: {
         home: resolve(process.cwd(), 'index.html'),
-        app: resolve(process.cwd(), 'app/index.html'),
+        avery: resolve(process.cwd(), 'avery/index.html'),
       },
     },
   },

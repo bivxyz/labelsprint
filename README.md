@@ -33,8 +33,23 @@ npm run build
 The Vite build produces two public entry points in `dist/`:
 
 - `/` is the static, indexable LabelsPrint marketing homepage.
-- `/app/` is the interactive label editor and is intentionally marked `noindex,follow`.
+- `/avery/` is the interactive label editor and is intentionally marked `noindex,follow`.
 
 Cloudflare Pages should continue using `npm run build` with `dist` as the output directory.
 
 The generated Avery catalog index lives in `src/averyTemplateCatalog.js`. It stores safe template codes only; raw URLs and pasted page fragments are intentionally excluded. The Workspace integration scaffold lives in `workspace-extension/`.
+
+## Avery Template Imports
+
+Calibrated layouts have one source of truth: `data/avery-templates.json`. Run `npm run templates:generate` after changing it to regenerate the browser and Google Workspace catalogs. `npm run templates:check` fails when either generated file is stale.
+
+The **Import Avery templates** GitHub Action calls Avery's downloadables API from the runner, analyzes official PDFs, and opens a pull request for layouts that pass validation. The default dry run analyzes all catalog records still shown as **Coming soon** and uploads a report without modifying template data. A comma-separated SKU input limits the run to specific products.
+
+For a local PDF calibration:
+
+```bash
+python -m pip install -r tools/requirements.txt
+python tools/avery_template_import.py --sku 94224 --pdf /path/to/Avery94224RectangleLabels.pdf --dry-run
+```
+
+Downloaded PDFs are temporary and are never committed. The manifest records the originating SKU, endpoint, PDF SHA-256 checksum, import time, and parser version. If Avery later requires authentication, configure it only in GitHub Actions; never put credentials in browser code.

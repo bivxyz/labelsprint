@@ -7,12 +7,15 @@
     "dev": "vite --configLoader runner --port=3000 --host=0.0.0.0",
     "build": "vite build --configLoader runner",
     "preview": "vite preview --configLoader runner",
-    "lint": "npm run build"
+    "lint": "npm run templates:check && npm run build",
+    "templates:generate": "node tools/generate-template-outputs.mjs",
+    "templates:check": "node tools/generate-template-outputs.mjs --check",
+    "templates:import": "python tools/avery_template_import.py"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",
     "docx": "^8.6.0",
-    "jspdf": "^2.5.2",
+    "jspdf": "^4.2.1",
     "lucide": "^0.468.0",
     "papaparse": "^5.4.1",
     "react": "^18.3.1",

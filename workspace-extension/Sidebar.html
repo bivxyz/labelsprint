@@ -1,29 +1,26 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
       :root {
         color-scheme: light;
-        --heritage-blue: #0039A6;
-        --azure-blue: #2475E6;
-        --heritage-red: #E00034;
-        --sky-blue: #C8E5FE;
-        --white: #FFFFFF;
-        --light-grey: #F7F7F7;
-        --medium-grey: #F1F1F1;
-        --navy: #000A55;
+        --blue: #0039a6;
+        --azure: #2475e6;
+        --red: #e00034;
+        --sky: #c8e5fe;
+        --navy: #000a55;
         --black: #000000;
-        --ink: var(--black);
-        --muted: #4F4F4F;
-        --line: #D7D7D7;
-        --soft: var(--light-grey);
-        --brand: var(--heritage-blue);
-        --brand-dark: var(--navy);
-        --success: #006B4F;
-        --danger: var(--heritage-red);
-        --font-display: "Diatype", Arial, Helvetica, sans-serif;
-        --font-body: "Circular", "Diatype", Arial, Helvetica, sans-serif;
+        --white: #ffffff;
+        --light: #f7f7f7;
+        --medium: #f1f1f1;
+        --line: #d7d7d7;
+        --muted: #535353;
+        --success: #006b4f;
+        --radius: 7px;
+        --display: "Diatype", Arial, Helvetica, sans-serif;
+        --body: "Circular", Arial, Helvetica, sans-serif;
       }
 
       * {
@@ -33,204 +30,305 @@
       body {
         margin: 0;
         background: var(--white);
-        color: var(--ink);
-        font-family: var(--font-body);
-        font-size: 14px;
+        color: var(--black);
+        font: 14px/1.4 var(--body);
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible {
+        outline: 3px solid var(--sky);
+        outline-offset: 1px;
       }
 
       .app {
         min-height: 100vh;
-        display: grid;
-        grid-template-rows: auto 1fr;
       }
 
       .brand {
         position: sticky;
         top: 0;
-        z-index: 2;
+        z-index: 5;
         display: flex;
         align-items: center;
         gap: 10px;
-        padding: 14px 16px;
+        min-height: 64px;
+        padding: 12px 14px;
         border-bottom: 1px solid var(--line);
         background: var(--white);
       }
 
       .mark {
-        width: 34px;
-        height: 34px;
+        width: 38px;
+        height: 38px;
         display: grid;
-        place-items: center;
+        grid-template-columns: repeat(2, 9px);
+        grid-template-rows: repeat(2, 9px);
+        place-content: center;
+        gap: 4px;
+        flex: 0 0 auto;
         border-radius: 8px;
-        background: var(--brand);
-        color: var(--white);
-        font-weight: 800;
-        letter-spacing: 0;
-        font-family: var(--font-display);
+        border-bottom: 3px solid var(--red);
+        background: var(--blue);
+      }
+
+      .mark span {
+        border-radius: 2px;
+        background: var(--white);
       }
 
       .brand h1 {
         margin: 0;
-        color: var(--brand-dark);
-        font-family: var(--font-display);
-        font-size: 18px;
-        line-height: 1.1;
+        color: var(--navy);
+        font: 800 19px/1.05 var(--display);
       }
 
       .brand p {
-        margin: 2px 0 0;
+        margin: 3px 0 0;
         color: var(--muted);
-        font-family: var(--font-body);
         font-size: 12px;
       }
 
       main {
-        padding: 18px 16px 22px;
+        padding: 4px 14px 24px;
       }
 
-      section {
-        margin: 0 0 22px;
+      .step {
+        padding: 17px 0 18px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .step:last-child {
+        border-bottom: 0;
+      }
+
+      .eyebrow {
+        margin: 0 0 2px;
+        color: var(--red);
+        font: 800 11px/1.2 var(--display);
+        text-transform: uppercase;
+      }
+
+      h2 {
+        margin: 0 0 13px;
+        color: var(--black);
+        font: 800 18px/1.2 var(--display);
       }
 
       label,
-      .section-title {
+      .label {
         display: block;
-        margin: 0 0 8px;
+        margin: 0 0 6px;
         color: var(--black);
-        font-family: var(--font-display);
-        font-size: 16px;
-        font-weight: 700;
+        font: 700 13px/1.25 var(--display);
       }
 
       .field {
         width: 100%;
-        min-height: 46px;
+        min-height: 42px;
         border: 1px solid var(--line);
-        border-radius: 6px;
+        border-radius: var(--radius);
         background: var(--white);
-        color: var(--ink);
-        font: inherit;
+        color: var(--black);
       }
 
-      select.field,
-      input.field {
-        padding: 0 12px;
+      input.field,
+      select.field {
+        padding: 0 11px;
       }
 
       textarea.field {
-        min-height: 152px;
-        padding: 14px;
+        min-height: 142px;
+        padding: 11px;
         resize: vertical;
         line-height: 1.45;
       }
 
+      .field-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 10px;
+      }
+
+      .stack {
+        display: grid;
+        gap: 11px;
+      }
+
       .helper {
-        margin: 7px 0 0;
+        margin: 6px 0 0;
         color: var(--muted);
-        font-family: var(--font-body);
         font-size: 12px;
         line-height: 1.35;
       }
 
-      .status {
-        display: flex;
+      .selection {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
         align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        padding: 10px 12px;
+        gap: 8px;
+        min-height: 46px;
+        padding: 9px 10px;
         border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--soft);
-        color: var(--muted);
-        font-family: var(--font-display);
-        font-size: 12px;
-        font-weight: 700;
+        border-left: 4px solid var(--azure);
+        border-radius: var(--radius);
+        background: var(--light);
       }
 
-      .link-button {
+      .selection strong {
+        display: block;
+        font: 700 12px/1.35 var(--display);
+      }
+
+      .selection small {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+      }
+
+      .text-button {
         border: 0;
+        padding: 4px;
         background: transparent;
-        color: var(--brand);
+        color: var(--blue);
         cursor: pointer;
-        font: inherit;
         font-weight: 800;
-        padding: 0;
+      }
+
+      .template-meta {
+        min-height: 18px;
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .editor-wrap textarea {
+        border-radius: var(--radius) var(--radius) 0 0;
       }
 
       .toolbar {
-        display: flex;
-        align-items: center;
-        gap: 2px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
+        padding: 8px;
         border: 1px solid var(--line);
         border-top: 0;
-        border-radius: 0 0 6px 6px;
-        padding: 8px;
-        background: var(--white);
+        border-radius: 0 0 var(--radius) var(--radius);
       }
 
       .tool {
-        width: 32px;
-        height: 32px;
-        border: 1px solid transparent;
-        border-radius: 5px;
+        min-width: 0;
+        height: 34px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
         background: var(--white);
-        color: var(--muted);
+        color: var(--black);
         cursor: pointer;
-        font-size: 18px;
+        font-family: var(--display);
         font-weight: 800;
-        font-family: var(--font-display);
       }
 
       .tool.active {
-        border-color: var(--azure-blue);
-        background: var(--sky-blue);
-        color: var(--brand);
+        border-color: var(--blue);
+        border-bottom-color: var(--red);
+        background: var(--blue);
+        color: var(--white);
       }
 
-      .tool svg {
-        width: 19px;
-        height: 19px;
-        pointer-events: none;
+      .segmented {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .preview-stage {
+        display: grid;
+        place-items: center;
+        min-height: 190px;
+        padding: 18px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--medium);
+      }
+
+      .label-preview {
+        display: flex;
+        width: 100%;
+        max-width: 260px;
+        min-width: 84px;
+        min-height: 52px;
+        max-height: 220px;
+        padding: 8px;
+        overflow: hidden;
+        border: 1px solid #b8b8b8;
+        border-radius: 3px;
+        background: var(--white);
+        color: var(--black);
+      }
+
+      .label-preview-content {
+        width: 100%;
+        overflow: hidden;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        line-height: 1.2;
+      }
+
+      .preview-note {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 7px;
+        color: var(--muted);
+        font-size: 11px;
       }
 
       .actions {
         display: grid;
-        grid-template-columns: 1fr;
-        gap: 10px;
+        gap: 9px;
       }
 
       .primary,
       .secondary {
         width: 100%;
         min-height: 44px;
-        border-radius: 7px;
+        border-radius: var(--radius);
         cursor: pointer;
-        font: inherit;
-        font-weight: 800;
+        font: 800 14px var(--display);
       }
 
       .primary {
-        border: 1px solid var(--brand);
-        background: var(--brand);
+        border: 1px solid var(--red);
+        background: var(--red);
         color: var(--white);
       }
 
       .secondary {
-        border: 1px solid var(--navy);
-        background: var(--navy);
+        border: 1px solid var(--blue);
+        background: var(--blue);
         color: var(--white);
       }
 
       button:disabled,
+      input:disabled,
       select:disabled,
       textarea:disabled {
         cursor: wait;
-        opacity: 0.62;
+        opacity: 0.58;
       }
 
       .result {
         min-height: 18px;
-        margin-top: 10px;
+        margin-top: 9px;
         color: var(--muted);
         font-size: 12px;
         line-height: 1.4;
@@ -242,72 +340,136 @@
       }
 
       .error {
-        color: var(--danger);
+        color: var(--red);
         font-weight: 700;
-      }
-
-      .editor-wrap .field {
-        border-radius: 6px 6px 0 0;
       }
     </style>
   </head>
   <body>
     <div class="app">
       <header class="brand">
-        <div class="mark" aria-hidden="true">LP</div>
+        <div class="mark" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
         <div>
           <h1>LabelsPrint.app</h1>
-          <p>Google Sheets mail merge labels</p>
+          <p>Mail merge labels from Google Sheets</p>
         </div>
       </header>
 
       <main>
-        <section>
-          <label for="template">Label template</label>
-          <select id="template" class="field">
-            <option value="5160">Avery 5160 / 8160</option>
-          </select>
-          <p id="templateHelper" class="helper">30 labels per sheet, ready for address label mail merge.</p>
+        <section class="step" aria-labelledby="dataHeading">
+          <p class="eyebrow">Step 1</p>
+          <h2 id="dataHeading">Select merge data</h2>
+          <div class="selection">
+            <div>
+              <strong id="selectionStatus">Loading selected rows...</strong>
+              <small id="selectionDetail">The first selected row becomes merge fields.</small>
+            </div>
+            <button id="refresh" type="button" class="text-button">Refresh</button>
+          </div>
+          <p class="helper">Select a header row plus the rows you want to print, then refresh.</p>
         </section>
 
-        <section>
-          <div class="status">
-            <span id="selectionStatus">Loading selected rows...</span>
-            <button id="refresh" type="button" class="link-button">Refresh</button>
+        <section class="step" aria-labelledby="setupHeading">
+          <p class="eyebrow">Step 2</p>
+          <h2 id="setupHeading">Set up the sheet</h2>
+          <div class="stack">
+            <div>
+              <label for="templateSearch">Find an Avery template</label>
+              <input id="templateSearch" class="field" type="search" inputmode="numeric" placeholder="Search by SKU, category, or size">
+            </div>
+            <div>
+              <label for="template">Label template</label>
+              <select id="template" class="field">
+                <option value="5160">Avery 5160 / 8160</option>
+              </select>
+              <div id="templateMeta" class="template-meta">Address labels, 30 per sheet</div>
+            </div>
+            <div class="field-row">
+              <div>
+                <label for="labelCount">Labels to generate</label>
+                <input id="labelCount" class="field" type="number" min="1" value="1">
+              </div>
+              <div>
+                <label for="skipCount">Skip used labels</label>
+                <input id="skipCount" class="field" type="number" min="0" value="0">
+              </div>
+            </div>
           </div>
         </section>
 
-        <section>
-          <div class="section-title">Format labels</div>
-          <label for="mergeField">Add merge fields</label>
-          <select id="mergeField" class="field" disabled>
-            <option value="">Select a merge field</option>
-          </select>
-        </section>
-
-        <section class="editor-wrap">
-          <label for="labelContent">Label content</label>
-          <textarea id="labelContent" class="field" spellcheck="false">&lt;&lt;Name&gt;&gt;
+        <section class="step" aria-labelledby="contentHeading">
+          <p class="eyebrow">Step 3</p>
+          <h2 id="contentHeading">Create label content</h2>
+          <div class="stack">
+            <div>
+              <label for="mergeField">Add merge field</label>
+              <select id="mergeField" class="field" disabled>
+                <option value="">Select a merge field</option>
+              </select>
+            </div>
+            <div class="editor-wrap">
+              <label for="labelContent">Label content</label>
+              <textarea id="labelContent" class="field" spellcheck="false">&lt;&lt;Name&gt;&gt;
 &lt;&lt;Street Address 1&gt;&gt;
 &lt;&lt;Street Address 2&gt;&gt;</textarea>
-          <div class="toolbar" aria-label="Formatting toolbar">
-            <button class="tool" type="button" data-toggle="bold" title="Bold" aria-label="Bold">B</button>
-            <button class="tool" type="button" data-toggle="italic" title="Italic" aria-label="Italic"><em>I</em></button>
-            <button class="tool" type="button" data-toggle="underline" title="Underline" aria-label="Underline"><u>U</u></button>
-            <button class="tool active" type="button" data-align="left" title="Align left" aria-label="Align left">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 10h10M4 14h16M4 18h10"/></svg>
-            </button>
-            <button class="tool" type="button" data-align="center" title="Align center" aria-label="Align center">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M7 10h10M4 14h16M7 18h10"/></svg>
-            </button>
-            <button class="tool" type="button" data-align="right" title="Align right" aria-label="Align right">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M10 10h10M4 14h16M10 18h10"/></svg>
-            </button>
+              <div class="toolbar" aria-label="Text style">
+                <button class="tool" type="button" data-toggle="bold" title="Bold" aria-label="Bold">B</button>
+                <button class="tool" type="button" data-toggle="italic" title="Italic" aria-label="Italic"><em>I</em></button>
+                <button class="tool" type="button" data-toggle="underline" title="Underline" aria-label="Underline"><u>U</u></button>
+                <button class="tool" type="button" data-toggle="uppercase" title="Uppercase" aria-label="Uppercase">AA</button>
+              </div>
+            </div>
+            <div class="field-row">
+              <div>
+                <label for="fontFamily">Typeface</label>
+                <select id="fontFamily" class="field">
+                  <option>Arial</option>
+                  <option>Roboto</option>
+                  <option>Georgia</option>
+                  <option>Times New Roman</option>
+                  <option>Courier New</option>
+                </select>
+              </div>
+              <div>
+                <label for="fontSize">Font size</label>
+                <input id="fontSize" class="field" type="number" min="6" max="36" value="10">
+              </div>
+            </div>
+            <div>
+              <span class="label">Horizontal alignment</span>
+              <div class="segmented">
+                <button class="tool active" type="button" data-align="left">Left</button>
+                <button class="tool" type="button" data-align="center">Center</button>
+                <button class="tool" type="button" data-align="right">Right</button>
+              </div>
+            </div>
+            <div>
+              <span class="label">Vertical alignment</span>
+              <div class="segmented">
+                <button class="tool" type="button" data-vertical="top">Top</button>
+                <button class="tool active" type="button" data-vertical="middle">Middle</button>
+                <button class="tool" type="button" data-vertical="bottom">Bottom</button>
+              </div>
+            </div>
           </div>
-          <p class="helper">Use tokens like &lt;&lt;Name&gt;&gt; to merge data from the selected sheet range.</p>
         </section>
 
-        <section>
+        <section class="step" aria-labelledby="previewHeading">
+          <h2 id="previewHeading">Label preview</h2>
+          <div class="preview-stage">
+            <div id="labelPreview" class="label-preview" aria-label="Preview of the first generated label">
+              <div id="labelPreviewContent" class="label-preview-content">Select rows to preview the first label.</div>
+            </div>
+          </div>
+          <div class="preview-note">
+            <span id="previewTemplate">Avery 5160 / 8160</span>
+            <span>First selected row</span>
+          </div>
+          <p class="helper">Approximate screen preview. The generated file uses calibrated print dimensions.</p>
+        </section>
+
+        <section class="step" aria-labelledby="exportHeading">
+          <h2 id="exportHeading">Create print files</h2>
           <div class="actions">
             <button id="createPdf" type="button" class="primary">Create PDF</button>
             <button id="createDoc" type="button" class="secondary">Create Google Doc</button>
@@ -319,31 +481,60 @@
 
     <script>
       const state = {
+        templates: [],
         headers: [],
         rows: [],
+        contentTouched: false,
         formatting: {
+          fontFamily: 'Arial',
+          fontSize: 10,
           bold: false,
           italic: false,
           underline: false,
-          align: 'left'
+          uppercase: false,
+          align: 'left',
+          verticalAlign: 'middle'
         },
         busy: false
       };
 
       const els = {
+        templateSearch: document.getElementById('templateSearch'),
         template: document.getElementById('template'),
-        templateHelper: document.getElementById('templateHelper'),
+        templateMeta: document.getElementById('templateMeta'),
         status: document.getElementById('selectionStatus'),
+        selectionDetail: document.getElementById('selectionDetail'),
         refresh: document.getElementById('refresh'),
+        labelCount: document.getElementById('labelCount'),
+        skipCount: document.getElementById('skipCount'),
         mergeField: document.getElementById('mergeField'),
         labelContent: document.getElementById('labelContent'),
+        fontFamily: document.getElementById('fontFamily'),
+        fontSize: document.getElementById('fontSize'),
+        labelPreview: document.getElementById('labelPreview'),
+        labelPreviewContent: document.getElementById('labelPreviewContent'),
+        previewTemplate: document.getElementById('previewTemplate'),
         createPdf: document.getElementById('createPdf'),
         createDoc: document.getElementById('createDoc'),
         result: document.getElementById('result')
       };
 
       els.refresh.addEventListener('click', loadSelection);
+      els.templateSearch.addEventListener('input', renderTemplates);
+      els.template.addEventListener('change', updateTemplateMeta);
       els.mergeField.addEventListener('change', insertMergeField);
+      els.labelContent.addEventListener('input', () => {
+        state.contentTouched = true;
+        renderPreview();
+      });
+      els.fontFamily.addEventListener('change', () => {
+        state.formatting.fontFamily = els.fontFamily.value;
+        renderPreview();
+      });
+      els.fontSize.addEventListener('input', () => {
+        state.formatting.fontSize = Number(els.fontSize.value) || 10;
+        renderPreview();
+      });
       els.createPdf.addEventListener('click', () => exportLabels('pdf'));
       els.createDoc.addEventListener('click', () => exportLabels('doc'));
 
@@ -352,6 +543,7 @@
           const key = button.dataset.toggle;
           state.formatting[key] = !state.formatting[key];
           button.classList.toggle('active', state.formatting[key]);
+          renderPreview();
         });
       });
 
@@ -361,6 +553,17 @@
           document.querySelectorAll('[data-align]').forEach((item) => {
             item.classList.toggle('active', item === button);
           });
+          renderPreview();
+        });
+      });
+
+      document.querySelectorAll('[data-vertical]').forEach((button) => {
+        button.addEventListener('click', () => {
+          state.formatting.verticalAlign = button.dataset.vertical;
+          document.querySelectorAll('[data-vertical]').forEach((item) => {
+            item.classList.toggle('active', item === button);
+          });
+          renderPreview();
         });
       });
 
@@ -370,29 +573,72 @@
       function loadTemplates() {
         google.script.run
           .withSuccessHandler((templates) => {
-            if (!Array.isArray(templates) || !templates.length) return;
-            els.template.innerHTML = '';
-            templates.forEach((template) => {
-              const option = document.createElement('option');
-              option.value = template.id;
-              option.textContent = template.name;
-              option.dataset.perSheet = template.labelsPerSheet;
-              els.template.appendChild(option);
-            });
-            updateTemplateHelper();
+            state.templates = Array.isArray(templates) ? templates : [];
+            renderTemplates();
           })
           .withFailureHandler(() => {
-            updateTemplateHelper();
+            state.templates = [];
+            renderTemplates();
           })
           .getLabelsPrintTemplates();
       }
 
-      els.template.addEventListener('change', updateTemplateHelper);
+      function renderTemplates() {
+        const query = els.templateSearch.value.trim().toLowerCase();
+        const current = els.template.value || '5160';
+        const filtered = state.templates.filter((template) => {
+          const searchable = [
+            template.id,
+            template.name,
+            template.category,
+            template.description,
+            ...(template.aliases || [])
+          ].join(' ').toLowerCase();
+          return !query || searchable.includes(query);
+        });
 
-      function updateTemplateHelper() {
-        const selected = els.template.options[els.template.selectedIndex];
-        const perSheet = selected ? selected.dataset.perSheet || '30' : '30';
-        els.templateHelper.textContent = `${perSheet} labels per sheet, ready for label mail merge.`;
+        els.template.innerHTML = '';
+        const groups = new Map();
+        filtered.forEach((template) => {
+          if (!groups.has(template.category)) {
+            const group = document.createElement('optgroup');
+            group.label = template.category;
+            groups.set(template.category, group);
+            els.template.appendChild(group);
+          }
+          const option = document.createElement('option');
+          option.value = template.id;
+          option.textContent = template.name;
+          groups.get(template.category).appendChild(option);
+        });
+
+        if (!filtered.length) {
+          const option = document.createElement('option');
+          option.value = '';
+          option.textContent = 'No matching calibrated templates';
+          els.template.appendChild(option);
+        } else if (filtered.some((template) => template.id === current)) {
+          els.template.value = current;
+        } else {
+          els.template.value = filtered[0].id;
+        }
+        updateTemplateMeta();
+      }
+
+      function updateTemplateMeta() {
+        const template = state.templates.find((item) => item.id === els.template.value);
+        if (!template) {
+          els.templateMeta.textContent = 'Try another Avery number or category.';
+          els.skipCount.max = 0;
+          renderPreview();
+          return;
+        }
+        els.templateMeta.textContent = `${template.description}. ${template.labelsPerSheet} per sheet.`;
+        els.skipCount.max = Math.max(0, template.labelsPerSheet - 1);
+        if (Number(els.skipCount.value) > Number(els.skipCount.max)) {
+          els.skipCount.value = els.skipCount.max;
+        }
+        renderPreview();
       }
 
       function loadSelection() {
@@ -402,15 +648,28 @@
             state.headers = payload.headers || [];
             state.rows = payload.rows || [];
             renderMergeFields();
-            els.status.textContent = state.rows.length
-              ? `${state.rows.length} selected rows from ${payload.source || 'Google Sheets'}`
-              : 'Select rows with a header row, then refresh';
+            els.labelCount.value = Math.max(1, state.rows.length);
+            els.labelCount.max = Math.max(1, state.rows.length);
+
+            if (!state.contentTouched && state.headers.length) {
+              els.labelContent.value = suggestedContent(state.headers);
+            }
+
+            if (state.rows.length) {
+              els.status.textContent = `${state.rows.length} rows ready`;
+              els.selectionDetail.textContent = `${payload.source || 'Google Sheets'} - ${payload.rangeA1 || 'selected range'}`;
+            } else {
+              els.status.textContent = 'No data rows selected';
+              els.selectionDetail.textContent = 'Select headers plus at least one row.';
+            }
             els.result.textContent = '';
+            renderPreview();
             setBusy(false);
           })
           .withFailureHandler((error) => {
             showError(error && error.message ? error.message : 'Could not read the selected rows.');
             els.status.textContent = 'Selection unavailable';
+            els.selectionDetail.textContent = 'Check the selected range and try again.';
             setBusy(false);
           })
           .getSelectedMergeData();
@@ -427,6 +686,10 @@
         els.mergeField.disabled = !state.headers.length || state.busy;
       }
 
+      function suggestedContent(headers) {
+        return headers.slice(0, 4).map((header) => `<<${header}>>`).join('\n');
+      }
+
       function insertMergeField() {
         const field = els.mergeField.value;
         if (!field) return;
@@ -436,9 +699,61 @@
         const end = els.labelContent.selectionEnd;
         const current = els.labelContent.value;
         els.labelContent.value = `${current.slice(0, start)}${token}${current.slice(end)}`;
+        state.contentTouched = true;
         els.labelContent.focus();
         els.labelContent.setSelectionRange(start + token.length, start + token.length);
         els.mergeField.value = '';
+        renderPreview();
+      }
+
+      function renderPreview() {
+        const template = state.templates.find((item) => item.id === els.template.value);
+        const widthIn = Number(template && template.widthIn) || 2.625;
+        const heightIn = Number(template && template.heightIn) || 1;
+        const ratio = Math.max(0.25, Math.min(5, widthIn / heightIn));
+        const row = state.rows[0] || [];
+        const content = mergePreviewContent(els.labelContent.value, state.headers, row);
+        const verticalPosition = {
+          top: 'flex-start',
+          middle: 'center',
+          bottom: 'flex-end'
+        }[state.formatting.verticalAlign] || 'center';
+
+        els.labelPreview.style.aspectRatio = `${widthIn} / ${heightIn}`;
+        els.labelPreview.style.width = ratio < 1
+          ? `${Math.max(84, Math.round(190 * ratio))}px`
+          : '100%';
+        els.labelPreview.style.alignItems = verticalPosition;
+        els.labelPreviewContent.style.textAlign = state.formatting.align;
+        els.labelPreviewContent.style.fontFamily = state.formatting.fontFamily;
+        els.labelPreviewContent.style.fontSize = `${Math.max(8, Math.min(22, state.formatting.fontSize * 1.15))}px`;
+        els.labelPreviewContent.style.fontWeight = state.formatting.bold ? '700' : '400';
+        els.labelPreviewContent.style.fontStyle = state.formatting.italic ? 'italic' : 'normal';
+        els.labelPreviewContent.style.textDecoration = state.formatting.underline ? 'underline' : 'none';
+        els.labelPreviewContent.textContent = content || 'The first generated label will appear here.';
+        els.previewTemplate.textContent = template ? template.name : 'Choose a template';
+      }
+
+      function mergePreviewContent(source, headers, row) {
+        const hasRow = Array.isArray(row) && row.length > 0;
+        const merged = String(source || '').replace(/<<([^<>]+)>>|{{([^{}]+)}}/g, (match, angleField, braceField) => {
+          const field = String(angleField || braceField || '').trim();
+          const index = headers.findIndex((header) => normalizePreviewField(header) === normalizePreviewField(field));
+          if (hasRow && index >= 0) {
+            return String(row[index] || '');
+          }
+          return field;
+        });
+        const compact = merged
+          .split(/\r?\n/)
+          .map((line) => line.trimEnd())
+          .filter((line) => line.trim() !== '')
+          .join('\n');
+        return state.formatting.uppercase ? compact.toUpperCase() : compact;
+      }
+
+      function normalizePreviewField(value) {
+        return String(value || '').trim().toLowerCase().replace(/\s+/g, ' ');
       }
 
       function exportLabels(type) {
@@ -446,19 +761,24 @@
           showError('Select at least one data row under a header row before exporting.');
           return;
         }
+        if (!els.template.value) {
+          showError('Choose a calibrated Avery template before exporting.');
+          return;
+        }
 
         const payload = {
           templateId: els.template.value,
           headers: state.headers,
           rows: state.rows,
+          labelCount: Number(els.labelCount.value),
+          skipCount: Number(els.skipCount.value),
           labelContent: els.labelContent.value,
           formatting: state.formatting
         };
 
-        setBusy(true, type === 'pdf' ? 'Creating PDF...' : 'Creating Google Doc...');
-        els.result.textContent = type === 'pdf'
-          ? 'Creating your print-ready PDF in Drive...'
-          : 'Creating your Google Doc label sheet...';
+        const progress = type === 'pdf' ? 'Creating PDF...' : 'Creating Google Doc...';
+        setBusy(true, progress);
+        els.result.textContent = `${progress} Keep this sidebar open.`;
 
         const runner = google.script.run
           .withSuccessHandler((result) => {
@@ -480,10 +800,25 @@
 
       function setBusy(isBusy, message) {
         state.busy = isBusy;
-        [els.template, els.refresh, els.mergeField, els.labelContent, els.createPdf, els.createDoc]
-          .forEach((element) => {
-            element.disabled = isBusy || (element === els.mergeField && !state.headers.length);
-          });
+        [
+          els.templateSearch,
+          els.template,
+          els.refresh,
+          els.labelCount,
+          els.skipCount,
+          els.mergeField,
+          els.labelContent,
+          els.fontFamily,
+          els.fontSize,
+          els.createPdf,
+          els.createDoc
+        ].forEach((element) => {
+          element.disabled = isBusy || (element === els.mergeField && !state.headers.length);
+        });
+
+        document.querySelectorAll('.tool').forEach((button) => {
+          button.disabled = isBusy;
+        });
 
         if (message) {
           els.status.textContent = message;
@@ -495,13 +830,13 @@
       }
 
       function escapeHtml(value) {
-        return String(value).replace(/[&<>"']/g, (char) => ({
+        return String(value).replace(/[&<>"']/g, (character) => ({
           '&': '&amp;',
           '<': '&lt;',
           '>': '&gt;',
           '"': '&quot;',
           "'": '&#39;'
-        })[char]);
+        })[character]);
       }
 
       function escapeAttribute(value) {

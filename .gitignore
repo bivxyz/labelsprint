@@ -3,6 +3,11 @@ node_modules/
 build/
 dist/
 coverage/
+artifacts/
+.avery-template-cache/
+.python/
+__pycache__/
+*.pyc
 .DS_Store
 *.log
 .env*

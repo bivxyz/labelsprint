@@ -1,127 +1,15 @@
-const LABELSPRINT_TEMPLATES = {
-  '5160': {
-    id: '5160',
-    name: 'Avery 5160 / 8160',
-    columns: 3,
-    rows: 10,
-    labelsPerSheet: 30,
-    labelWidthPt: 189,
-    labelHeightPt: 72
-  },
-  '5161': {
-    id: '5161',
-    name: 'Avery 5161 / 8161',
-    columns: 2,
-    rows: 10,
-    labelsPerSheet: 20,
-    labelWidthPt: 288,
-    labelHeightPt: 72
-  },
-  '5162': {
-    id: '5162',
-    name: 'Avery 5162 / 8162',
-    columns: 2,
-    rows: 7,
-    labelsPerSheet: 14,
-    labelWidthPt: 288,
-    labelHeightPt: 96
-  },
-  '5163': {
-    id: '5163',
-    name: 'Avery 5163 / 8163',
-    columns: 2,
-    rows: 5,
-    labelsPerSheet: 10,
-    labelWidthPt: 288,
-    labelHeightPt: 144
-  },
-  '5164': {
-    id: '5164',
-    name: 'Avery 5164 / 8164',
-    columns: 2,
-    rows: 3,
-    labelsPerSheet: 6,
-    labelWidthPt: 288,
-    labelHeightPt: 240
-  },
-  '5126': {
-    id: '5126',
-    name: 'Avery 5126 / 8126',
-    columns: 1,
-    rows: 2,
-    labelsPerSheet: 2,
-    labelWidthPt: 612,
-    labelHeightPt: 396
-  },
-  '5168': {
-    id: '5168',
-    name: 'Avery 5168 / 8168',
-    columns: 2,
-    rows: 2,
-    labelsPerSheet: 4,
-    labelWidthPt: 252,
-    labelHeightPt: 360
-  },
-  '5167': {
-    id: '5167',
-    name: 'Avery 5167 / 8167',
-    columns: 4,
-    rows: 20,
-    labelsPerSheet: 80,
-    labelWidthPt: 126,
-    labelHeightPt: 36
-  },
-  '5195': {
-    id: '5195',
-    name: 'Avery 5195 / 8195',
-    columns: 4,
-    rows: 15,
-    labelsPerSheet: 60,
-    labelWidthPt: 126,
-    labelHeightPt: 48
-  },
-  '5366': {
-    id: '5366',
-    name: 'Avery 5366',
-    columns: 2,
-    rows: 15,
-    labelsPerSheet: 30,
-    labelWidthPt: 247.5,
-    labelHeightPt: 48
-  },
-  '5371': {
-    id: '5371',
-    name: 'Avery 5371 / 8371',
-    columns: 2,
-    rows: 5,
-    labelsPerSheet: 10,
-    labelWidthPt: 252,
-    labelHeightPt: 144
-  },
-  '5395': {
-    id: '5395',
-    name: 'Avery 5395',
-    columns: 2,
-    rows: 4,
-    labelsPerSheet: 8,
-    labelWidthPt: 243,
-    labelHeightPt: 168
-  },
-  '22806': {
-    id: '22806',
-    name: 'Avery 22806',
-    columns: 3,
-    rows: 4,
-    labelsPerSheet: 12,
-    labelWidthPt: 144,
-    labelHeightPt: 144
-  }
-};
+/**
+ * @OnlyCurrentDoc
+ */
+
+const LABELSPRINT_MAX_ROWS = 5000;
+const LABELSPRINT_MAX_CELL_LENGTH = 2000;
+const LABELSPRINT_POINTS_PER_INCH = 72;
 
 function onOpen() {
   SpreadsheetApp.getUi()
     .createMenu('LabelsPrint')
-    .addItem('Open mail merge labels', 'showLabelsPrintSidebar')
+    .addItem('Create mail merge labels', 'showLabelsPrintSidebar')
     .addToUi();
 }
 
@@ -130,10 +18,8 @@ function onInstall() {
 }
 
 function showLabelsPrintSidebar() {
-  const html = HtmlService.createHtmlOutputFromFile('Sidebar')
-    .setTitle('LabelsPrint')
-    .setSandboxMode(HtmlService.SandboxMode.IFRAME);
-
+  const html = HtmlService.createHtmlOutputFromFile('sidebar')
+    .setTitle('LabelsPrint');
   SpreadsheetApp.getUi().showSidebar(html);
 }
 
@@ -143,61 +29,47 @@ function getSelectedMergeData() {
   const source = spreadsheet ? spreadsheet.getName() : 'Google Sheets';
 
   if (!range) {
-    return {
-      headers: [],
-      rows: [],
-      values: [],
-      firstRowIsHeader: true,
-      source
-    };
+    return emptySelection_(source);
+  }
+
+  if (range.getNumRows() > LABELSPRINT_MAX_ROWS + 1) {
+    throw new Error(`Select no more than ${LABELSPRINT_MAX_ROWS} data rows at a time.`);
   }
 
   const values = range.getDisplayValues()
-    .filter((row) => row.some((cell) => String(cell).trim() !== ''));
+    .map((row) => row.map(sanitizeMergeValue_))
+    .filter((row) => row.some((cell) => cell !== ''));
 
   if (!values.length) {
-    return {
-      headers: [],
-      rows: [],
-      values: [],
-      firstRowIsHeader: true,
-      source
-    };
+    return emptySelection_(source);
   }
 
-  const headerRow = values[0];
-  const headers = headerRow.map((header, index) => {
-    const trimmed = String(header).trim();
-    return trimmed || `Column ${index + 1}`;
-  });
+  const headers = values[0].map((header, index) => header || `Column ${index + 1}`);
+  const rows = values.slice(1, LABELSPRINT_MAX_ROWS + 1);
 
   return {
-    headers,
-    rows: values.slice(1),
-    values,
+    headers: headers,
+    rows: rows,
     firstRowIsHeader: true,
-    source
+    source: source,
+    rangeA1: range.getA1Notation()
   };
 }
 
 function getLabelsPrintTemplates() {
-  return Object.keys(LABELSPRINT_TEMPLATES).map((id) => {
-    const template = LABELSPRINT_TEMPLATES[id];
-    return {
+  return Object.keys(LABELSPRINT_TEMPLATES)
+    .map((id) => LABELSPRINT_TEMPLATES[id])
+    .sort((first, second) => Number(first.id) - Number(second.id))
+    .map((template) => ({
       id: template.id,
       name: template.name,
-      labelsPerSheet: template.labelsPerSheet
-    };
-  });
-}
-
-function getSelectedValues() {
-  const payload = getSelectedMergeData();
-  return {
-    values: payload.values,
-    firstRowIsHeader: payload.firstRowIsHeader,
-    source: payload.source
-  };
+      category: template.category,
+      description: template.description,
+      labelsPerSheet: template.labelsPerSheet,
+      widthIn: template.widthIn,
+      heightIn: template.heightIn,
+      aliases: template.aliases
+    }));
 }
 
 function createLabelsGoogleDoc(payload) {
@@ -210,138 +82,257 @@ function createLabelsGoogleDoc(payload) {
 }
 
 function createLabelsPdf(payload) {
-  const doc = createLabelsDocument_(payload || {});
-  const sourceFile = DriveApp.getFileById(doc.id);
-  const pdfBlob = sourceFile
-    .getAs(MimeType.PDF)
-    .setName(`${doc.name}.pdf`);
-  const pdfFile = DriveApp.createFile(pdfBlob);
+  const documentResult = createLabelsDocument_(payload || {});
+  const pdfName = `${documentResult.name}.pdf`;
+  const pdfBlob = exportDocumentBlob_(
+    documentResult.id,
+    MimeType.PDF,
+    pdfName
+  );
+  const pdfFile = Drive.Files.create(
+    {
+      name: pdfName,
+      mimeType: MimeType.PDF
+    },
+    pdfBlob,
+    {
+      fields: 'id,name'
+    }
+  );
+
+  try {
+    Drive.Files.update({ trashed: true }, documentResult.id, null, { fields: 'id' });
+  } catch (error) {
+    console.warn(`LabelsPrint could not trash the temporary source document: ${error.message}`);
+  }
 
   return {
-    name: pdfFile.getName(),
-    url: pdfFile.getUrl(),
+    name: pdfFile.name,
+    url: `https://drive.google.com/file/d/${pdfFile.id}/view`,
     type: 'pdf'
   };
 }
 
-function createLabelsDocument_(payload) {
-  const template = LABELSPRINT_TEMPLATES[payload.templateId] || LABELSPRINT_TEMPLATES['5160'];
-  const headers = normalizeHeaders_(payload.headers);
-  const rows = normalizeRows_(payload.rows);
-  const labelContent = String(payload.labelContent || '').trim() || defaultLabelContent_(headers);
-  const name = `LabelsPrint ${template.name} ${Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd HHmm')}`;
+function exportDocumentBlob_(fileId, mimeType, fileName) {
+  const exportUrl = `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(fileId)}/export` +
+    `?mimeType=${encodeURIComponent(mimeType)}&alt=media`;
+  const response = UrlFetchApp.fetch(exportUrl, {
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${ScriptApp.getOAuthToken()}`
+    },
+    muteHttpExceptions: true
+  });
+  const statusCode = response.getResponseCode();
+
+  if (statusCode < 200 || statusCode >= 300) {
+    const details = response.getContentText().slice(0, 500);
+    throw new Error(`PDF export failed (${statusCode}). ${details}`);
+  }
+
+  return response.getBlob()
+    .setContentType(MimeType.PDF)
+    .setName(fileName);
+}
+
+function createLabelsDocument_(rawPayload) {
+  const payload = normalizePayload_(rawPayload);
+  const template = getWorkspaceTemplate_(payload.templateId);
+  const labelContent = payload.labelContent || defaultLabelContent_(payload.headers);
+  const rows = payload.rows.slice(0, payload.labelCount || payload.rows.length);
+  const labels = rows.map((row) => mergeLabel_(labelContent, payload.headers, row, payload.formatting.uppercase));
+  const positions = Array(payload.skipCount).fill('').concat(labels);
+  const timestamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd HHmm');
+  const name = `LabelsPrint ${template.name} ${timestamp}`;
   const doc = DocumentApp.create(name);
   const body = doc.getBody();
 
-  body.clear();
-  body.setMarginTop(36);
-  body.setMarginRight(14);
-  body.setMarginBottom(36);
-  body.setMarginLeft(14);
-
-  appendLabels_(body, {
-    template,
-    headers,
-    rows,
-    labelContent,
-    formatting: payload.formatting || {}
-  });
-
+  configurePage_(body, template);
+  appendLabelPages_(body, template, positions, payload.formatting);
   doc.saveAndClose();
 
   return {
     id: doc.getId(),
-    name,
+    name: name,
     url: doc.getUrl()
   };
 }
 
-function appendLabels_(body, options) {
-  const labels = options.rows.length
-    ? options.rows.map((row) => mergeLabel_(options.labelContent, options.headers, row))
-    : [mergeLabel_(options.labelContent, options.headers, [])];
-  const perSheet = options.template.labelsPerSheet;
+function configurePage_(body, template) {
+  body.clear();
+  body.setPageWidth(8.5 * LABELSPRINT_POINTS_PER_INCH);
+  body.setPageHeight(11 * LABELSPRINT_POINTS_PER_INCH);
+  body.setMarginTop(template.topIn * LABELSPRINT_POINTS_PER_INCH);
+  body.setMarginLeft(template.leftIn * LABELSPRINT_POINTS_PER_INCH);
 
-  for (let start = 0; start < labels.length; start += perSheet) {
-    if (start > 0) {
+  const usedWidth = template.columns * template.widthIn +
+    Math.max(0, template.columns - 1) * template.horizontalGapIn;
+  const usedHeight = template.rows * template.heightIn +
+    Math.max(0, template.rows - 1) * template.verticalGapIn;
+
+  body.setMarginRight(Math.max(0, 8.5 - template.leftIn - usedWidth) * LABELSPRINT_POINTS_PER_INCH);
+  body.setMarginBottom(Math.max(0, 11 - template.topIn - usedHeight) * LABELSPRINT_POINTS_PER_INCH);
+}
+
+function appendLabelPages_(body, template, labels, formatting) {
+  const labelsPerSheet = template.labelsPerSheet;
+  const totalPositions = Math.max(1, labels.length);
+
+  for (let pageStart = 0; pageStart < totalPositions; pageStart += labelsPerSheet) {
+    if (pageStart > 0) {
       body.appendPageBreak();
     }
 
-    const pageLabels = labels.slice(start, start + perSheet);
-    const tableData = [];
-    let labelIndex = 0;
-
-    for (let rowIndex = 0; rowIndex < options.template.rows; rowIndex += 1) {
-      const row = [];
-      for (let colIndex = 0; colIndex < options.template.columns; colIndex += 1) {
-        row.push(pageLabels[labelIndex] || '');
-        labelIndex += 1;
-      }
-      tableData.push(row);
-    }
-
-    const table = body.appendTable(tableData);
+    const pageLabels = labels.slice(pageStart, pageStart + labelsPerSheet);
+    const table = body.appendTable(buildPageGrid_(template, pageLabels));
     table.setBorderWidth(0);
-    styleLabelsTable_(table, options.template, options.formatting);
+    stylePageGrid_(table, template, formatting);
   }
 }
 
-function styleLabelsTable_(table, template, formatting) {
-  const alignment = formatting.align || 'left';
-  const paragraphAlignment = {
+function buildPageGrid_(template, pageLabels) {
+  const grid = [];
+  let labelIndex = 0;
+
+  for (let labelRow = 0; labelRow < template.rows; labelRow += 1) {
+    const row = [];
+    for (let labelColumn = 0; labelColumn < template.columns; labelColumn += 1) {
+      row.push(pageLabels[labelIndex] || '');
+      labelIndex += 1;
+      if (template.horizontalGapIn > 0 && labelColumn < template.columns - 1) {
+        row.push('');
+      }
+    }
+    grid.push(row);
+
+    if (template.verticalGapIn > 0 && labelRow < template.rows - 1) {
+      grid.push(Array(row.length).fill(''));
+    }
+  }
+
+  return grid;
+}
+
+function stylePageGrid_(table, template, formatting) {
+  const labelHeightPt = template.heightIn * LABELSPRINT_POINTS_PER_INCH;
+  const gapHeightPt = template.verticalGapIn * LABELSPRINT_POINTS_PER_INCH;
+  const labelWidthPt = template.widthIn * LABELSPRINT_POINTS_PER_INCH;
+  const gapWidthPt = template.horizontalGapIn * LABELSPRINT_POINTS_PER_INCH;
+
+  for (let tableRowIndex = 0; tableRowIndex < table.getNumRows(); tableRowIndex += 1) {
+    const row = table.getRow(tableRowIndex);
+    const isGapRow = template.verticalGapIn > 0 && tableRowIndex % 2 === 1;
+    row.setMinimumHeight(isGapRow ? gapHeightPt : labelHeightPt);
+
+    for (let tableColumnIndex = 0; tableColumnIndex < row.getNumCells(); tableColumnIndex += 1) {
+      const cell = row.getCell(tableColumnIndex);
+      const isGapColumn = template.horizontalGapIn > 0 && tableColumnIndex % 2 === 1;
+      cell.setWidth(isGapColumn ? gapWidthPt : labelWidthPt);
+      cell.setPaddingTop(isGapRow || isGapColumn ? 0 : 6);
+      cell.setPaddingRight(isGapRow || isGapColumn ? 0 : 8);
+      cell.setPaddingBottom(isGapRow || isGapColumn ? 0 : 6);
+      cell.setPaddingLeft(isGapRow || isGapColumn ? 0 : 8);
+
+      if (!isGapRow && !isGapColumn) {
+        styleLabelCell_(cell, formatting);
+      }
+    }
+  }
+}
+
+function styleLabelCell_(cell, formatting) {
+  const verticalAlignment = {
+    top: DocumentApp.VerticalAlignment.TOP,
+    middle: DocumentApp.VerticalAlignment.CENTER,
+    bottom: DocumentApp.VerticalAlignment.BOTTOM
+  }[formatting.verticalAlign] || DocumentApp.VerticalAlignment.CENTER;
+  const horizontalAlignment = {
     left: DocumentApp.HorizontalAlignment.LEFT,
     center: DocumentApp.HorizontalAlignment.CENTER,
     right: DocumentApp.HorizontalAlignment.RIGHT
-  }[alignment] || DocumentApp.HorizontalAlignment.LEFT;
+  }[formatting.align] || DocumentApp.HorizontalAlignment.LEFT;
 
-  for (let rowIndex = 0; rowIndex < table.getNumRows(); rowIndex += 1) {
-    const row = table.getRow(rowIndex);
-    row.setMinimumHeight(template.labelHeightPt);
+  cell.setVerticalAlignment(verticalAlignment);
 
-    for (let colIndex = 0; colIndex < row.getNumCells(); colIndex += 1) {
-      const cell = row.getCell(colIndex);
-      cell.setWidth(template.labelWidthPt);
-      cell.setPaddingTop(8);
-      cell.setPaddingBottom(6);
-      cell.setPaddingLeft(12);
-      cell.setPaddingRight(12);
-      cell.setVerticalAlignment(DocumentApp.VerticalAlignment.CENTER);
+  const text = cell.editAsText();
+  text.setFontFamily(formatting.fontFamily);
+  text.setFontSize(formatting.fontSize);
+  text.setBold(formatting.bold);
+  text.setItalic(formatting.italic);
+  text.setUnderline(formatting.underline);
 
-      const text = cell.editAsText();
-      text.setFontFamily('Diatype');
-      text.setFontSize(10);
-      text.setBold(Boolean(formatting.bold));
-      text.setItalic(Boolean(formatting.italic));
-      text.setUnderline(Boolean(formatting.underline));
-
-      for (let paragraphIndex = 0; paragraphIndex < cell.getNumChildren(); paragraphIndex += 1) {
-        const child = cell.getChild(paragraphIndex);
-        if (child.getType() === DocumentApp.ElementType.PARAGRAPH) {
-          child.asParagraph().setAlignment(paragraphAlignment);
-        }
-      }
+  for (let childIndex = 0; childIndex < cell.getNumChildren(); childIndex += 1) {
+    const child = cell.getChild(childIndex);
+    if (child.getType() === DocumentApp.ElementType.PARAGRAPH) {
+      child.asParagraph()
+        .setAlignment(horizontalAlignment)
+        .setLineSpacing(1);
     }
   }
 }
 
-function mergeLabel_(template, headers, row) {
-  return String(template).replace(/<<([^<>]+)>>/g, (match, fieldName) => {
-    const normalizedField = normalizeFieldName_(fieldName);
+function normalizePayload_(payload) {
+  const headers = normalizeHeaders_(payload.headers);
+  const rows = normalizeRows_(payload.rows, headers.length);
+
+  if (!headers.length || !rows.length) {
+    throw new Error('Select a header row and at least one data row before exporting.');
+  }
+
+  const template = getWorkspaceTemplate_(payload.templateId);
+  return {
+    templateId: template.id,
+    headers: headers,
+    rows: rows,
+    labelContent: sanitizeMergeValue_(payload.labelContent),
+    labelCount: clampInteger_(payload.labelCount, 0, rows.length, rows.length),
+    skipCount: clampInteger_(payload.skipCount, 0, template.labelsPerSheet - 1, 0),
+    formatting: {
+      fontFamily: allowedFontFamily_(payload.formatting && payload.formatting.fontFamily),
+      fontSize: clampInteger_(payload.formatting && payload.formatting.fontSize, 6, 36, 10),
+      bold: Boolean(payload.formatting && payload.formatting.bold),
+      italic: Boolean(payload.formatting && payload.formatting.italic),
+      underline: Boolean(payload.formatting && payload.formatting.underline),
+      uppercase: Boolean(payload.formatting && payload.formatting.uppercase),
+      align: allowedValue_(payload.formatting && payload.formatting.align, ['left', 'center', 'right'], 'left'),
+      verticalAlign: allowedValue_(payload.formatting && payload.formatting.verticalAlign, ['top', 'middle', 'bottom'], 'middle')
+    }
+  };
+}
+
+function mergeLabel_(template, headers, row, uppercase) {
+  const merged = String(template).replace(/<<([^<>]+)>>|{{([^{}]+)}}/g, (match, angleField, braceField) => {
+    const normalizedField = normalizeFieldName_(angleField || braceField);
     const index = headers.findIndex((header) => normalizeFieldName_(header) === normalizedField);
     return index >= 0 ? String(row[index] || '') : '';
   });
+  const compact = merged
+    .split(/\r?\n/)
+    .map((line) => line.trimEnd())
+    .filter((line) => line.trim() !== '')
+    .join('\n');
+  return uppercase ? compact.toUpperCase() : compact;
 }
 
 function normalizeHeaders_(headers) {
   return Array.isArray(headers)
-    ? headers.map((header, index) => String(header || `Column ${index + 1}`).trim())
+    ? headers.slice(0, 100).map((header, index) => sanitizeMergeValue_(header) || `Column ${index + 1}`)
     : [];
 }
 
-function normalizeRows_(rows) {
+function normalizeRows_(rows, columnCount) {
   return Array.isArray(rows)
-    ? rows.filter((row) => Array.isArray(row) && row.some((cell) => String(cell).trim() !== ''))
+    ? rows.slice(0, LABELSPRINT_MAX_ROWS)
+      .filter((row) => Array.isArray(row) && row.some((cell) => sanitizeMergeValue_(cell) !== ''))
+      .map((row) => Array.from({ length: columnCount }, (unused, index) => sanitizeMergeValue_(row[index])))
     : [];
+}
+
+function sanitizeMergeValue_(value) {
+  return String(value == null ? '' : value)
+    .replace(/\u0000/g, '')
+    .slice(0, LABELSPRINT_MAX_CELL_LENGTH)
+    .trim();
 }
 
 function normalizeFieldName_(value) {
@@ -349,9 +340,31 @@ function normalizeFieldName_(value) {
 }
 
 function defaultLabelContent_(headers) {
-  if (!headers.length) {
-    return '<<Name>>\n<<Street Address 1>>\n<<Street Address 2>>';
-  }
+  return headers.slice(0, 4).map((header) => `<<${header}>>`).join('\n');
+}
 
-  return headers.slice(0, 3).map((header) => `<<${header}>>`).join('\n');
+function clampInteger_(value, minimum, maximum, fallback) {
+  const parsed = Number.parseInt(value, 10);
+  if (!Number.isFinite(parsed)) {
+    return fallback;
+  }
+  return Math.min(maximum, Math.max(minimum, parsed));
+}
+
+function allowedValue_(value, allowed, fallback) {
+  return allowed.indexOf(String(value || '')) >= 0 ? String(value) : fallback;
+}
+
+function allowedFontFamily_(value) {
+  return allowedValue_(value, ['Arial', 'Roboto', 'Georgia', 'Times New Roman', 'Courier New'], 'Arial');
+}
+
+function emptySelection_(source) {
+  return {
+    headers: [],
+    rows: [],
+    firstRowIsHeader: true,
+    source: source,
+    rangeA1: ''
+  };
 }
