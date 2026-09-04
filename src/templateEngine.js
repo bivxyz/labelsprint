@@ -6,7 +6,7 @@ const MAX_CELL_LENGTH = 1000;
 export const DEFAULT_LABEL_TEMPLATE = "John Doe\n123 Street Ave\nCity, State 12345";
 
 export const DEFAULT_STYLE = Object.freeze({
-  fontFamily: "diatype",
+  fontFamily: "arial",
   fontSize: 10,
   alignment: "left",
   verticalAlign: "top",
@@ -14,6 +14,35 @@ export const DEFAULT_STYLE = Object.freeze({
   isItalic: false,
   isUpper: false,
 });
+
+const LABEL_FONT_FAMILIES = new Set(["arial", "roboto", "georgia", "times", "courier"]);
+
+export function normalizeFontFamily(value) {
+  const fontFamily = String(value || "").trim().toLowerCase();
+  if (fontFamily === "diatype" || fontFamily === "circular") return "arial";
+  return LABEL_FONT_FAMILIES.has(fontFamily) ? fontFamily : DEFAULT_STYLE.fontFamily;
+}
+
+export function normalizeLabelStyle(style = {}) {
+  return {
+    ...DEFAULT_STYLE,
+    ...(style && typeof style === "object" ? style : {}),
+    fontFamily: normalizeFontFamily(style?.fontFamily),
+  };
+}
+
+export function normalizeLabelOverrides(overrides = {}) {
+  if (!overrides || typeof overrides !== "object" || Array.isArray(overrides)) return {};
+
+  return Object.fromEntries(
+    Object.entries(overrides)
+      .filter(([, override]) => override && typeof override === "object")
+      .map(([index, override]) => [index, {
+        ...override,
+        style: normalizeLabelStyle(override.style),
+      }]),
+  );
+}
 
 export function clampNumber(value, min, max, fallback) {
   const parsed = Number.parseInt(value, 10);
@@ -244,8 +273,10 @@ export function getTotalLabels(state) {
 }
 
 export function getStyleForIndex(state, index) {
-  const base = { ...DEFAULT_STYLE, ...state.style };
-  return state.overrides?.[index]?.style ? { ...base, ...state.overrides[index].style } : base;
+  const base = normalizeLabelStyle(state.style);
+  return state.overrides?.[index]?.style
+    ? normalizeLabelStyle({ ...base, ...state.overrides[index].style })
+    : base;
 }
 
 export function resolveLabelAt(state, index) {

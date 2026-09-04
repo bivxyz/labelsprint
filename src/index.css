@@ -90,7 +90,7 @@
   --red: var(--avery-heritage-red);
   --font-display: "Diatype", "Arial", "Helvetica Neue", Helvetica, sans-serif;
   --font-body: "Circular", "Diatype", "Arial", "Helvetica Neue", Helvetica, sans-serif;
-  --font-label: "Diatype", "Arial", "Helvetica Neue", Helvetica, sans-serif;
+  --font-label: "Arial", "Helvetica Neue", Helvetica, sans-serif;
   --radius-control: 12px;
   --radius-media: 14px;
   --shadow: none;
@@ -968,8 +968,7 @@ button:disabled {
   white-space: pre-wrap;
 }
 
-.label-cell,
-.label-text {
+.label-cell {
   font-family: var(--font-label);
 }
 

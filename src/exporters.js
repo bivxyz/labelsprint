@@ -66,9 +66,9 @@ function verticalAlignToDocx(alignment) {
 
 function pdfFontFamily(style) {
   return {
-    diatype: "helvetica",
-    circular: "helvetica",
     arial: "helvetica",
+    roboto: "helvetica",
+    georgia: "times",
     helvetica: "helvetica",
     times: "times",
     courier: "courier",
@@ -77,13 +77,13 @@ function pdfFontFamily(style) {
 
 function docxFontFamily(style) {
   return {
-    diatype: "Diatype",
-    circular: "Circular",
     arial: "Arial",
+    roboto: "Roboto",
+    georgia: "Georgia",
     helvetica: "Helvetica",
     times: "Times New Roman",
     courier: "Courier New",
-  }[style.fontFamily] || "Diatype";
+  }[style.fontFamily] || "Arial";
 }
 
 function borderlessCellBorders() {

@@ -22,6 +22,8 @@ import {
   getDataRows,
   getStyleForIndex,
   getTotalLabels,
+  normalizeLabelOverrides,
+  normalizeLabelStyle,
   parseCsvFile,
   parsePastedText,
   resolveLabelAt,
@@ -436,9 +438,9 @@ function renderShell() {
               <label>
                 <span class="field-label">Typeface</span>
                 <select id="fontFamily" class="input-control compact">
-                  <option value="diatype">Diatype</option>
-                  <option value="circular">Circular</option>
                   <option value="arial">Arial</option>
+                  <option value="roboto">Roboto</option>
+                  <option value="georgia">Georgia</option>
                   <option value="times">Times New Roman</option>
                   <option value="courier">Courier New</option>
                 </select>
@@ -685,7 +687,7 @@ function loadPreferences() {
       inputMethod: parsed.inputMethod || state.inputMethod,
       manualCount: clampNumber(parsed.manualCount, 1, 25000, state.manualCount),
       firstRowIsHeader: parsed.firstRowIsHeader !== false,
-      style: { ...DEFAULT_STYLE, ...(parsed.style || {}) },
+      style: normalizeLabelStyle(parsed.style),
       skipCount: clampNumber(parsed.skipCount, 0, 25000, 0),
       zoom: Number.isFinite(parsed.zoom) ? parsed.zoom : state.zoom,
       logoDataUrl: parsed.logoEmoji ? emojiToLogoDataUrl(parsed.logoEmoji) : null,
@@ -948,12 +950,19 @@ function renderTemplateGrid() {
   const activeFilters = hasActiveTemplateFilters();
   const showAll = templateLibraryMode === "all" || activeFilters;
   const fragment = document.createDocumentFragment();
-  const baseEntries = showAll ? getAllTemplateLibraryEntries() : getTopTemplateEntries();
+  const allEntries = getAllTemplateLibraryEntries();
+  const baseEntries = showAll ? allEntries : getTopTemplateEntries();
   const entries = baseEntries.filter(templateEntryMatchesFilters);
+  const readyCount = entries.filter((entry) => entry.type === "template").length;
+  const comingSoonCount = entries.length - readyCount;
+  const allReadyCount = allEntries.filter((entry) => entry.type === "template").length;
+  const allComingSoonCount = allEntries.length - allReadyCount;
 
   els.templateGrid.innerHTML = "";
   els.templateGrid.classList.toggle("list", false);
-  els.templateResultsCount.textContent = `${entries.length.toLocaleString()} Avery template${entries.length === 1 ? "" : "s"}`;
+  els.templateResultsCount.textContent = showAll
+    ? `${entries.length.toLocaleString()} template${entries.length === 1 ? "" : "s"} | ${readyCount.toLocaleString()} ready | ${comingSoonCount.toLocaleString()} coming soon`
+    : `${entries.length.toLocaleString()} top templates | ${allReadyCount.toLocaleString()} ready | ${allComingSoonCount.toLocaleString()} coming soon in full catalog`;
   els.clearTemplateFilters.classList.toggle("hidden", !activeFilters);
   els.templateShapeFilter.value = templateFilters.shape;
   els.templateCategoryFilter.value = templateFilters.category;
@@ -1191,12 +1200,12 @@ function renderPreview(options = {}) {
       cell.style.height = `${slot.hPt}pt`;
       cell.style.fontSize = `${label.style.fontSize}pt`;
       cell.style.fontFamily = {
-        diatype: "Diatype, Arial, Helvetica, sans-serif",
-        circular: "Circular, Diatype, Arial, Helvetica, sans-serif",
         arial: "Arial, Helvetica, sans-serif",
+        roboto: "Roboto, Arial, Helvetica, sans-serif",
+        georgia: "Georgia, \"Times New Roman\", Times, serif",
         times: "\"Times New Roman\", Times, serif",
         courier: "\"Courier New\", Courier, monospace",
-      }[label.style.fontFamily] || "Diatype, Arial, Helvetica, sans-serif";
+      }[label.style.fontFamily] || "Arial, Helvetica, sans-serif";
       cell.style.fontWeight = label.style.isBold ? "700" : "400";
       cell.style.fontStyle = label.style.isItalic ? "italic" : "normal";
       cell.dataset.index = String(absoluteIndex);
@@ -1513,8 +1522,8 @@ function importProject(file) {
         data: Array.isArray(project.data) ? project.data : [],
         headers: Array.isArray(project.headers) ? project.headers : [],
         labelTemplate: String(project.labelTemplate || DEFAULT_LABEL_TEMPLATE),
-        overrides: project.overrides && typeof project.overrides === "object" ? project.overrides : {},
-        style: { ...DEFAULT_STYLE, ...(project.style || {}) },
+        overrides: normalizeLabelOverrides(project.overrides),
+        style: normalizeLabelStyle(project.style),
         skipCount: clampNumber(project.skipCount, 0, 25000, 0),
         logoDataUrl: project.logoDataUrl || (project.logoEmoji ? emojiToLogoDataUrl(project.logoEmoji) : null),
         logoName: project.logoName || "",

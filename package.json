@@ -7,7 +7,8 @@
     "dev": "vite --configLoader runner --port=3000 --host=0.0.0.0",
     "build": "vite build --configLoader runner",
     "preview": "vite preview --configLoader runner",
-    "lint": "npm run templates:check && npm run build",
+    "lint": "npm run templates:check && npm run fonts:check && npm run build",
+    "fonts:check": "node tools/check-label-fonts.mjs",
     "templates:generate": "node tools/generate-template-outputs.mjs",
     "templates:check": "node tools/generate-template-outputs.mjs --check",
     "templates:import": "python tools/avery_template_import.py"
