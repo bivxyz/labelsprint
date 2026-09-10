@@ -29,7 +29,7 @@ export const TOP_AVERY_CODES = Object.freeze([
   "5390",
   "5309",
   "18660",
-  "5388",
+  "5294",
 ]);
 
 export const FEATURED_AVERY_CODES = TOP_AVERY_CODES;

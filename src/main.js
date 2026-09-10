@@ -3,11 +3,9 @@ import { createIcons, icons } from "lucide";
 import { exportDocx, exportPdf } from "./exporters.js";
 import {
   AVERY_TEMPLATES,
-  AVERY_TEMPLATE_CODE_COUNT,
   buildSlots,
   getAllTemplateLibraryEntries,
   getTopTemplateEntries,
-  getUncalibratedCatalogMatches,
   getTemplateById,
   LETTER,
   POINTS_PER_INCH,
@@ -111,7 +109,6 @@ const templateFilters = {
   shape: "Any",
   category: "Any",
   perSheet: "Any",
-  status: "All",
 };
 
 const tutorialSteps = [
@@ -584,14 +581,6 @@ function renderShell() {
                 <option>80+</option>
               </select>
             </label>
-            <label>
-              <span class="field-label">Status</span>
-              <select id="templateStatusFilter" class="input-control compact">
-                <option>All</option>
-                <option>Ready to use</option>
-                <option>Coming soon</option>
-              </select>
-            </label>
             <button id="clearTemplateFilters" class="text-button hidden" type="button">Clear filters</button>
           </aside>
           <section class="template-results" aria-live="polite">
@@ -665,7 +654,7 @@ function cacheElements() {
     "italicToggle", "upperToggle", "logoInput", "logoName", "removeLogo", "logoControls", "logoPosition",
     "logoSize", "templateMeta", "previewTitle", "fillCounter", "zoomSelect", "previewArea", "pagesContainer",
     "templateModal", "closeTemplateModal", "templateSearch", "templateShapeFilter", "templateCategoryFilter",
-    "templatePerSheetFilter", "templateStatusFilter", "clearTemplateFilters", "templateResultsCount", "templateGrid", "labelModal", "closeLabelModal",
+    "templatePerSheetFilter", "clearTemplateFilters", "templateResultsCount", "templateGrid", "labelModal", "closeLabelModal",
     "labelModalTitle", "labelModalBody", "resetLabel", "cancelLabel", "saveLabel", "exportModal", "exportTitle",
     "exportDetail", "exportProgress", "tutorialOverlay", "tutorialSpotlight", "tutorialCard", "tutorialDots",
     "tutorialSkip", "tutorialTitle", "tutorialBody", "tutorialBack", "tutorialNext", "toast",
@@ -820,7 +809,6 @@ function hasActiveTemplateFilters() {
     || templateFilters.shape !== "Any"
     || templateFilters.category !== "Any"
     || templateFilters.perSheet !== "Any"
-    || templateFilters.status !== "All"
   );
 }
 
@@ -832,8 +820,6 @@ function templateEntryMatchesFilters(entry) {
   if (templateFilters.shape !== "Any" && getEntryShape(entry) !== templateFilters.shape) return false;
   if (templateFilters.category !== "Any" && getEntryCategory(entry) !== templateFilters.category) return false;
   if (!perSheetMatches(getEntryPerSheet(entry), templateFilters.perSheet)) return false;
-  if (templateFilters.status === "Ready to use" && entry.type !== "template") return false;
-  if (templateFilters.status === "Coming soon" && entry.type !== "catalog") return false;
   return true;
 }
 
@@ -948,26 +934,33 @@ function createCatalogCard(record, listStyle = false, representedCodes = []) {
 
 function renderTemplateGrid() {
   const activeFilters = hasActiveTemplateFilters();
+  const searchQuery = els.templateSearch.value.trim();
+  const isSearching = Boolean(searchQuery);
   const showAll = templateLibraryMode === "all" || activeFilters;
   const fragment = document.createDocumentFragment();
   const allEntries = getAllTemplateLibraryEntries();
-  const baseEntries = showAll ? allEntries : getTopTemplateEntries();
+  const readyEntries = allEntries.filter((entry) => entry.type === "template");
+  const baseEntries = isSearching
+    ? allEntries
+    : showAll
+      ? readyEntries
+      : getTopTemplateEntries().filter((entry) => entry.type === "template");
   const entries = baseEntries.filter(templateEntryMatchesFilters);
   const readyCount = entries.filter((entry) => entry.type === "template").length;
   const comingSoonCount = entries.length - readyCount;
-  const allReadyCount = allEntries.filter((entry) => entry.type === "template").length;
-  const allComingSoonCount = allEntries.length - allReadyCount;
+  const allReadyCount = readyEntries.length;
 
   els.templateGrid.innerHTML = "";
   els.templateGrid.classList.toggle("list", false);
-  els.templateResultsCount.textContent = showAll
-    ? `${entries.length.toLocaleString()} template${entries.length === 1 ? "" : "s"} | ${readyCount.toLocaleString()} ready | ${comingSoonCount.toLocaleString()} coming soon`
-    : `${entries.length.toLocaleString()} top templates | ${allReadyCount.toLocaleString()} ready | ${allComingSoonCount.toLocaleString()} coming soon in full catalog`;
+  els.templateResultsCount.textContent = isSearching
+    ? `${entries.length.toLocaleString()} match${entries.length === 1 ? "" : "es"} | ${readyCount.toLocaleString()} ready | ${comingSoonCount.toLocaleString()} coming soon`
+    : showAll
+      ? `${entries.length.toLocaleString()} ready template${entries.length === 1 ? "" : "s"}`
+      : `${entries.length.toLocaleString()} top templates | ${allReadyCount.toLocaleString()} ready in catalog`;
   els.clearTemplateFilters.classList.toggle("hidden", !activeFilters);
   els.templateShapeFilter.value = templateFilters.shape;
   els.templateCategoryFilter.value = templateFilters.category;
   els.templatePerSheetFilter.value = templateFilters.perSheet;
-  els.templateStatusFilter.value = templateFilters.status;
 
   entries.forEach((entry) => {
     if (entry.type === "template") {
@@ -980,7 +973,9 @@ function renderTemplateGrid() {
   if (!entries.length) {
     const empty = document.createElement("p");
     empty.className = "empty-state";
-    empty.textContent = `No Avery template matches found in ${AVERY_TEMPLATE_CODE_COUNT.toLocaleString()} imported catalog records.`;
+    empty.textContent = isSearching
+      ? `No Avery template matches “${searchQuery}”.`
+      : "No ready Avery templates match these filters.";
     fragment.appendChild(empty);
   }
 
@@ -988,7 +983,7 @@ function renderTemplateGrid() {
     const seeAll = document.createElement("button");
     seeAll.type = "button";
     seeAll.className = "template-see-all";
-    seeAll.textContent = `See all ${AVERY_TEMPLATE_CODE_COUNT.toLocaleString()} Avery templates`;
+    seeAll.textContent = `See all ${allReadyCount.toLocaleString()} ready Avery templates`;
     seeAll.addEventListener("click", () => {
       templateLibraryMode = "all";
       renderTemplateGrid();
@@ -1616,7 +1611,6 @@ function bindEvents() {
     [els.templateShapeFilter, "shape"],
     [els.templateCategoryFilter, "category"],
     [els.templatePerSheetFilter, "perSheet"],
-    [els.templateStatusFilter, "status"],
   ].forEach(([select, key]) => {
     select.addEventListener("change", () => {
       templateFilters[key] = select.value;
@@ -1628,7 +1622,6 @@ function bindEvents() {
     templateFilters.shape = "Any";
     templateFilters.category = "Any";
     templateFilters.perSheet = "Any";
-    templateFilters.status = "All";
     templateLibraryMode = "top";
     renderTemplateGrid();
   });
