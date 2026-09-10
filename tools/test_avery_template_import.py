@@ -66,6 +66,10 @@ class ImportSelectionTests(unittest.TestCase):
         catalog = [{"code": "5160", "codes": ["5160", "8160"]}]
         self.assertEqual(target_records(catalog, manifest, ["8160"])[0]["code"], "5160")
 
+    def test_catalog_contains_codes_the_api_importer_safely_rejects(self):
+        with self.assertRaisesRegex(ImportFailure, "3-6 digits"):
+            validate_sku("T00-1VA")
+
     def test_pdf_response_validation(self):
         self.assertEqual(validate_pdf(b"%PDF-1.7\ncontent"), b"%PDF-1.7\ncontent")
         with self.assertRaisesRegex(ImportFailure, "PDF signature"):
@@ -79,8 +83,16 @@ class ImportSelectionTests(unittest.TestCase):
     def test_remote_url_allowlist(self):
         endpoint = "https://services.print.avery.com/dpp/public/v2/content/downloadables/"
         self.assertEqual(validate_remote_url(endpoint, "endpoint"), endpoint)
+        request_url = endpoint + "?deploymentId=US_en&sku=5390&consumer=Avery"
+        self.assertEqual(validate_remote_url(request_url, "endpoint"), request_url)
         with self.assertRaisesRegex(ImportFailure, "approved Avery"):
             validate_remote_url("https://example.com/dpp/public/v2/content/downloadables/", "endpoint")
+        with self.assertRaisesRegex(ImportFailure, "unexpected query"):
+            validate_remote_url(endpoint + "?deploymentId=US_en&sku=5390&consumer=Avery&redirect=https://example.com", "endpoint")
+        with self.assertRaisesRegex(ImportFailure, "unsupported query"):
+            validate_remote_url(endpoint + "?deploymentId=EU_en&sku=5390&consumer=Avery", "endpoint")
+        with self.assertRaisesRegex(ImportFailure, "3-6 digits"):
+            validate_remote_url(endpoint + "?deploymentId=US_en&sku=../../etc/passwd&consumer=Avery", "endpoint")
         with self.assertRaisesRegex(ImportFailure, "approved download"):
             validate_remote_url("https://s3.amazonaws.com/unrelated/file.pdf", "pdf")
 

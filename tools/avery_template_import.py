@@ -29,6 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_ENDPOINT = "https://services.print.avery.com/dpp/public/v2/content/downloadables/"
 PARSER_VERSION = "1.0.0"
 MAX_PDF_BYTES = 20 * 1024 * 1024
+CHECKPOINT_EVERY = 25
 LETTER_POINTS = (612.0, 792.0)
 POINTS_PER_INCH = 72.0
 ALLOWED_ENDPOINT_HOST = "services.print.avery.com"
@@ -86,8 +87,16 @@ def validate_remote_url(url: str, purpose: str) -> str:
 
     host = (parsed.hostname or "").lower()
     if purpose == "endpoint":
-        if host != ALLOWED_ENDPOINT_HOST or parsed.path != ALLOWED_ENDPOINT_PATH or parsed.query or parsed.fragment:
+        if host != ALLOWED_ENDPOINT_HOST or parsed.path != ALLOWED_ENDPOINT_PATH or parsed.fragment:
             raise ImportFailure("The configured endpoint is not the approved Avery downloadables API.")
+        if parsed.query:
+            query = urllib.parse.parse_qs(parsed.query, keep_blank_values=True, strict_parsing=True)
+            if set(query) != {"deploymentId", "sku", "consumer"}:
+                raise ImportFailure("The Avery API request contains unexpected query parameters.")
+            if query["deploymentId"] != ["US_en"] or query["consumer"] != ["Avery"]:
+                raise ImportFailure("The Avery API request contains unsupported query values.")
+            if len(query["sku"]) != 1 or validate_sku(query["sku"][0]) != query["sku"][0]:
+                raise ImportFailure("The Avery API request contains an invalid SKU.")
     elif purpose == "pdf":
         if host != ALLOWED_PDF_HOST or not ALLOWED_PDF_PATH.match(parsed.path) or parsed.fragment:
             raise ImportFailure("Avery returned a PDF URL outside the approved download location.")
@@ -124,6 +133,21 @@ def load_manifest(path: Path) -> dict[str, Any]:
     if manifest.get("schemaVersion") != 1 or not isinstance(manifest.get("templates"), list):
         raise ImportFailure("Template manifest must use schemaVersion 1.")
     return manifest
+
+
+def write_manifest(path: Path, manifest: dict[str, Any]) -> None:
+    temporary_path = path.with_suffix(path.suffix + ".tmp")
+    temporary_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    temporary_path.replace(path)
+
+
+def merge_imported_templates(manifest: dict[str, Any], imported: list[dict[str, Any]]) -> None:
+    imported_codes = {code for template in imported for code in template_codes(template)}
+    retained = [template for template in manifest["templates"] if not template_codes(template) & imported_codes]
+    manifest["templates"] = sorted(
+        retained + imported,
+        key=lambda item: (int(re.search(r"\d+", item["id"]).group()), item["id"]),
+    )
 
 
 def template_codes(template: dict[str, Any]) -> set[str]:
@@ -488,12 +512,15 @@ def main() -> int:
     imported: list[dict[str, Any]] = []
 
     for index, record in enumerate(records):
-        sku = validate_sku(record["code"])
+        sku = normalize_code(record.get("code"))
+        requested_remote_content = False
         try:
+            sku = validate_sku(sku)
             if args.pdf:
                 content = validate_pdf(args.pdf.read_bytes())
                 filename = args.pdf.name
             else:
+                requested_remote_content = True
                 content, filename = resolve_api_pdf(sku, args.endpoint)
             digest = hashlib.sha256(content).hexdigest()
             geometry = calibrate_pdf(content)
@@ -505,17 +532,18 @@ def main() -> int:
             imported.append(template)
             results.append({"sku": sku, "status": "imported", "filename": filename, "geometry": geometry})
             print(f"{sku}: {geometry['rows']}x{geometry['cols']} {geometry['shape']} ({geometry['perSheet']} per sheet)")
+            if not args.dry_run and len(imported) % CHECKPOINT_EVERY == 0:
+                merge_imported_templates(manifest, imported)
+                write_manifest(args.manifest, manifest)
         except (ImportFailure, OSError, ValueError) as error:
             results.append({"sku": sku, "status": "coming-soon", "reason": str(error)})
             print(f"{sku}: coming soon - {error}", file=sys.stderr)
-        if not args.pdf and index < len(records) - 1:
+        if requested_remote_content and index < len(records) - 1:
             time.sleep(max(0, args.delay))
 
     if not args.dry_run and imported:
-        imported_codes = {code for template in imported for code in template_codes(template)}
-        retained = [template for template in manifest["templates"] if not template_codes(template) & imported_codes]
-        manifest["templates"] = sorted(retained + imported, key=lambda item: (int(re.search(r"\d+", item["id"]).group()), item["id"]))
-        args.manifest.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+        merge_imported_templates(manifest, imported)
+        write_manifest(args.manifest, manifest)
 
     report_path = args.report or (ROOT / ("artifacts" if args.dry_run else "data") / "avery-template-import-report.json")
     report_path.parent.mkdir(parents=True, exist_ok=True)
